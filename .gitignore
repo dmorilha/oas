@@ -1,0 +1,6 @@
+Makefile.local
+.*.sw?
+*.o
+*.d
+a.out
+oas
