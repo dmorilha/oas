@@ -131,12 +131,30 @@ void DBUS::processMessages(void) {
   }
 }
 
-#define DBUS_METHOD_DEFINITION(M, S) \
-  void DBUS::M(DBusMessage * const m) { \
-    std::cout << #M << std::endl; \
-  } \
+void DBUS::clear(DBusMessage * const m) { }
+void DBUS::next(DBusMessage * const m) { }
 
-DBUS_METHOD_LIST(DBUS_METHOD_DEFINITION)
+void DBUS::play(DBusMessage * const m) {
+  DBusMessageIter arguments;
+  const char * value = NULL;
 
+  if ( ! dbus_message_iter_init(m, &arguments)) {
+    std::cerr << "Method was called with no parameters" << std::endl;
+
+  } else if (DBUS_TYPE_STRING == dbus_message_iter_get_arg_type(&arguments)) {
+    dbus_message_iter_get_basic(&arguments, &value);
+    //TODO(dmorilha): should be assert?
+    if (NULL != value) {
+      std::cout << "argument value is: " << value << std::endl;
+    }
+
+  } else {
+    std::cerr << "Argument is not string" << std::endl;
+  }
+}
+
+void DBUS::previous(DBusMessage * const m) { }
+void DBUS::pushBack(DBusMessage * const m) { }
+void DBUS::pushFront(DBusMessage * const m) { }
 
 } //end of oas namespace
