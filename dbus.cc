@@ -6,6 +6,7 @@
 #include <unistd.h>
 
 #include "dbus.h"
+#include "player.h"
 
 /*
 void reply_to_method_call(DBusMessage* msg, DBusConnection* conn) {
@@ -69,6 +70,7 @@ bool DBUS::checkErrors(const char * const p) {
 }
 
 DBUS::~DBUS(void) {
+  //TODO(dmorilha): causes an error
   /*
   if (NULL != connection_) {
     dbus_connection_close(connection_);
@@ -145,7 +147,9 @@ void DBUS::play(DBusMessage * const m) {
     dbus_message_iter_get_basic(&arguments, &value);
     //TODO(dmorilha): should be assert?
     if (NULL != value) {
-      std::cout << "argument value is: " << value << std::endl;
+      std::cout << "Argument value is: " << value << std::endl;
+      Player player;
+      player.play(value);
     }
 
   } else {
