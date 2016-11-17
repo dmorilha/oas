@@ -26,6 +26,12 @@ void execute(Process * & p, const char * const v) {
 
   const char * const arguments[] = {
     PLAYER,
+    // "-o", "both",
+    // "-r", //refresh resolution"
+    "--audio_queue", "1",
+    "--threshold", "10",
+    "--timeout", "60",
+    "--video_queue", "5",
     v,
     NULL
   };
