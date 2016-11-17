@@ -95,20 +95,13 @@ void Process::write(const char * const s) {
   assert(0 != in_);
   const size_t length = strlen(s);
   const int written = ::write(in_, s, length);
-  if (-1 == written) {
-    if (0 != errno) {
-      perror(NULL);
-    }
-  } else {
-    assert(length == written);
-  }
-  std::cerr << "len " << length << " " << written << std::endl;
+  assert(length == static_cast< size_t >(written));
 }
 
 bool Process::kill(void) {
-  if (0 != pid_) { return false; }
+  //TODO(dmorilha): not working...
+  if (0 == pid_) { return false; }
   return ::kill(pid_, SIGQUIT) == 0;
-
 }
 
 } //end of oas namespace
