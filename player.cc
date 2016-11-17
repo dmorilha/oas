@@ -4,14 +4,23 @@
 
 namespace oas {
 
-Player::Player(void) : process_(NULL) { }
+void disposeProcess(Process * & p) {
+  assert(NULL != p);
+  p->kill();
+  delete p;
+  p = NULL;
+}
 
-void Player::play(const char * const v) {
-  if (NULL != process_) {
-    disposeProcess();
+void execute(Process * & p, const char * const v) {
+  assert(NULL != v);
+
+  if (NULL != p) {
+    disposeProcess(p);
   }
 
-  process_ = new Process();
+  assert(NULL == p);
+
+  p = new Process();
 
   static const char * const PLAYER = "/usr/bin/omxplayer";
 
@@ -21,20 +30,46 @@ void Player::play(const char * const v) {
     NULL
   };
 
-  process_->execute(PLAYER, arguments);
+  p->execute(PLAYER, arguments);
+}
+
+Player::~Player(void) {
+  if (NULL != preloadedProcess_) {
+    disposeProcess(preloadedProcess_);
+  }
+
+  if (NULL != process_) {
+    disposeProcess(process_);
+  }
+}
+
+Player::Player(void) : preloadedProcess_(NULL), process_(NULL) { }
+
+void Player::play(const char * const v) {
+  execute(process_, v);
+}
+
+void Player::preload(const char * const v) {
+  execute(preloadedProcess_, v);
+  assert(NULL != preloadedProcess_);
+  preloadedProcess_->write("p"); //pause
 }
 
 void Player::stop(void) {
   if (NULL == process_) { return; }
   process_->write("q");
-  disposeProcess();
+  disposeProcess(process_);
+  //TODO(dmorilha): should this be only on next?
+  if (NULL != preloadedProcess_) {
+    process_ = preloadedProcess_;
+    preloadedProcess_ = NULL;
+    process_->write("p"); //resume
+  }
 }
 
-void Player::disposeProcess(void) {
-  assert(NULL != process_);
-  process_->kill();
-  delete process_;
-  process_ = NULL;
+void Player::pause(void) {
+  if (NULL == process_) { return; }
+  process_->write("p"); //pause
 }
 
 } //end of oas namespace

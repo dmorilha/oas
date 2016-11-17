@@ -125,6 +125,9 @@ void DBUS::processMessages(void) {
 
 #undef METHOD
 
+    /*
+     * yah I know this looks strange...
+     */
     {
       std::cerr << "Method not found." << std::endl;
     }
@@ -135,6 +138,7 @@ void DBUS::processMessages(void) {
 }
 
 void DBUS::clear(DBusMessage * const m) { }
+
 void DBUS::next(DBusMessage * const m) { }
 
 void DBUS::play(DBusMessage * const m) {
@@ -158,8 +162,28 @@ void DBUS::play(DBusMessage * const m) {
 }
 
 void DBUS::previous(DBusMessage * const m) { }
+
 void DBUS::pushBack(DBusMessage * const m) { }
-void DBUS::pushFront(DBusMessage * const m) { }
+
+void DBUS::pushFront(DBusMessage * const m) {
+  DBusMessageIter arguments;
+  const char * value = NULL;
+
+  if ( ! dbus_message_iter_init(m, &arguments)) {
+    std::cerr << "Method was called with no parameters" << std::endl;
+
+  } else if (DBUS_TYPE_STRING == dbus_message_iter_get_arg_type(&arguments)) {
+    dbus_message_iter_get_basic(&arguments, &value);
+    //TODO(dmorilha): should be assert?
+    if (NULL != value) {
+      assert(NULL != player_);
+      player_->preload(value);
+    }
+
+  } else {
+    std::cerr << "Argument is not string" << std::endl;
+  }
+}
 
 void DBUS::stop(DBusMessage * const m) {
   std::cout << "stop" << std::endl;
