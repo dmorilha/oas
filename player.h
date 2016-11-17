@@ -6,8 +6,11 @@
 namespace oas {
 
 struct Player {
-  Process process_;
+  Process * process_;
+  Player(void);
   void play(const char * const);
+  void stop(void);
+  void disposeProcess(void);
 };
 
 } //end of oas namespace

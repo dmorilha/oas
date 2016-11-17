@@ -6,7 +6,6 @@
 #include <unistd.h>
 
 #include "dbus.h"
-#include "player.h"
 
 /*
 void reply_to_method_call(DBusMessage* msg, DBusConnection* conn) {
@@ -78,13 +77,15 @@ DBUS::~DBUS(void) {
   */
 }
 
-DBUS::DBUS(void) {
-   dbus_error_init(&error_);
-   connection_ = dbus_bus_get(DBUS_BUS_SYSTEM, &error_);
-   checkErrors("Connection Error");
-   if (NULL == connection_) {
-     std::cerr << "Connection Error" << std::endl;
-   }
+DBUS::DBUS(Player * const p) :
+  player_(p) {
+  assert(NULL != player_);
+  dbus_error_init(&error_);
+  connection_ = dbus_bus_get(DBUS_BUS_SYSTEM, &error_);
+  checkErrors("Connection Error");
+  if (NULL == connection_) {
+    std::cerr << "Connection Error" << std::endl;
+  }
 }
 
 void DBUS::listen(void) {
@@ -147,9 +148,8 @@ void DBUS::play(DBusMessage * const m) {
     dbus_message_iter_get_basic(&arguments, &value);
     //TODO(dmorilha): should be assert?
     if (NULL != value) {
-      std::cout << "Argument value is: " << value << std::endl;
-      Player player;
-      player.play(value);
+      assert(NULL != player_);
+      player_->play(value);
     }
 
   } else {
@@ -160,5 +160,11 @@ void DBUS::play(DBusMessage * const m) {
 void DBUS::previous(DBusMessage * const m) { }
 void DBUS::pushBack(DBusMessage * const m) { }
 void DBUS::pushFront(DBusMessage * const m) { }
+
+void DBUS::stop(DBusMessage * const m) {
+  std::cout << "stop" << std::endl;
+  assert(NULL != player_);
+  player_->stop();
+}
 
 } //end of oas namespace

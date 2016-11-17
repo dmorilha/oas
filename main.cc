@@ -3,12 +3,14 @@
 #include <unistd.h>
 
 #include "dbus.h"
+#include "player.h"
 #include "queue.h"
 #include "tv.h"
 
-static const int TEN_MINUTES = 60 * 10;
+static const int TEN_MINUTES = 60 * 10 * 10;
 
-oas::DBUS dbus;
+oas::Player player;
+oas::DBUS dbus(&player);
 
 void loop(void) {
   using namespace oas;
