@@ -18,6 +18,7 @@ struct Process {
   bool kill(void);
   void wait(void) const;
   void write(const char * const);
+  bool exists(void) const;
 };
 
 } //end of oas namespace

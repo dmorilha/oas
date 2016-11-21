@@ -26,12 +26,14 @@ void execute(Process * & p, const char * const v) {
 
   const char * const arguments[] = {
     PLAYER,
-    // "-o", "both",
-    // "-r", //refresh resolution"
+    "-b",
+    "-I",
+    "-o", "both",
+    //"-r", //refresh resolution"
     "--audio_queue", "1",
     "--threshold", "10",
     "--timeout", "60",
-    "--video_queue", "5",
+    "--video_queue", "2",
     v,
     NULL
   };
@@ -49,10 +51,15 @@ Player::~Player(void) {
   }
 }
 
-Player::Player(void) : preloadedProcess_(NULL), process_(NULL) { }
+Player::Player(void) : state_(kStopped), preloadedProcess_(NULL), process_(NULL) { }
 
 void Player::play(const char * const v) {
   execute(process_, v);
+  if ( ! process_->exists()) {
+    disposeProcess(process_);
+  } else {
+    state_ = kPlaying;
+  }
 }
 
 void Player::preload(const char * const v) {
@@ -63,8 +70,11 @@ void Player::preload(const char * const v) {
 
 void Player::stop(void) {
   if (NULL == process_) { return; }
+  if (kStopped != state_) { return; }
   process_->write("q");
   disposeProcess(process_);
+  state_ = kStopped;
+
   //TODO(dmorilha): should this be only on next?
   if (NULL != preloadedProcess_) {
     process_ = preloadedProcess_;
@@ -75,7 +85,34 @@ void Player::stop(void) {
 
 void Player::pause(void) {
   if (NULL == process_) { return; }
+  if (kPlaying != state_) { return; }
   process_->write("p"); //pause
+  state_ = kPaused;
+}
+
+void Player::resume(void) {
+  if (NULL == process_) { return; }
+  if (kPaused != state_) { return; }
+  process_->write("p"); //pause
+  state_ = kPlaying;
+}
+
+Player::State Player::state(void) {
+  if (NULL != process_) {
+    switch (state_) {
+    case kPaused:
+    case kPlaying:
+      if ( ! process_->exists()) {
+        state_ = kStopped;
+      } else {
+        return state_;
+      }
+      break;
+    default:
+      break;
+    }
+  }
+  return kStopped;
 }
 
 } //end of oas namespace

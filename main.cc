@@ -20,7 +20,6 @@ void loop(void) {
   tv.on();
 
   for (int i = TEN_MINUTES; i > 0; --i) {
-    std::cout << i << std::endl;
     /*
     player.play(string.c_str());
     player.wait();
@@ -30,7 +29,7 @@ void loop(void) {
   }
 
   //sleep(TEN_MINUTES);
-  tv.off();
+  tv.standby();
 }
 
 int main(void) {

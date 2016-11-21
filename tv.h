@@ -1,11 +1,17 @@
 #ifndef tv_h
 #define tv_h
 
+#include <libcec/cec.h>
+
 namespace oas {
 
 struct TV {
-  void on(void);
-  void off(void);
+  CEC::ICECAdapter * adapter_;
+
+  ~TV();
+  TV(void);
+  void on(void) const;
+  void standby(void) const;
 };
 
 } //end of oas namespace

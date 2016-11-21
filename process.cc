@@ -8,28 +8,6 @@
 
 namespace oas {
 
-/*
-struct Stream {
-  FILE * steam_;
-
-  ~Stream() {
-    assert(NULL != stream_);
-    fclose(stream_);
-  }
-
-  Stream(const int f, const char const * m) {
-    assert(0 != f);
-    stream_ = fdopen(f, m);
-    assert(NULL != stream_);
-  }
-
-  void write(const char * const s) {
-    assert(stream_ != NULL);
-    fputs(s, stream_);
-  }
-};
-*/
-
 Process::~Process(void) {
   if (0 != pid_) {
     assert(0 != in_);
@@ -101,7 +79,18 @@ void Process::write(const char * const s) {
 bool Process::kill(void) {
   //TODO(dmorilha): not working...
   if (0 == pid_) { return false; }
-  return ::kill(pid_, SIGQUIT) == 0;
+  if ( ! exists()) { return false; }
+  const bool result = ::kill(pid_, SIGQUIT) == 0;
+  this->~Process();
+  pid_ = 0;
+  return result;
 }
 
+bool Process::exists(void) const {
+  if (0 == pid_) { return false; }
+  if (::kill(pid_, 0) != 0) {
+    return errno == ESRCH;
+  }
+  return true;
+}
 } //end of oas namespace
