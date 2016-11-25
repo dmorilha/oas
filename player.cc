@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <iostream>
 
 #include "player.h"
 
@@ -23,32 +24,28 @@ void execute(Process * & p, const char * const v, const int vo = 0) {
   p = new Process();
 
   static const char * const PLAYER = "/usr/bin/omxplayer";
+  char volume[64] = { 0 };
+  sprintf(volume, "%d", vo * 300);
+  std::cout << "volume " << volume << std::endl;
 
   const char * const arguments[] = {
     PLAYER,
-    "-b",
-    "-I",
-    "-o", "both",
-    "-r", //refresh resolution"
+    "--blank",
+    "--with-info",
+    "--adev", "both",
+    "--refresh",
     "--audio_queue", "1",
     "--threshold", "10",
     "--timeout", "60",
     "--video_queue", "2",
+    "--font", "/usr/share/fonts/TTF/DejaVuSans.ttf",
+    "--italic-font", "/usr/share/fonts/TTF/DejaVuSans-Oblique.ttf",
+    "--vol", volume,
     v,
     NULL
   };
 
   p->execute(PLAYER, arguments);
-
-  if (p->exists()) {
-    for (int i = 0; i > vo; --i) {
-      p->write("-");
-    }
-
-    for (int i = 0; i < vo; ++i) {
-      p->write("+");
-    }
-  }
 }
 
 Player::~Player(void) {
@@ -81,7 +78,7 @@ void Player::preload(const char * const v) {
 
 void Player::stop(void) {
   if (NULL == process_) { return; }
-  if (kStopped != state_) { return; }
+  if (kStopped == state_) { return; }
   process_->write("q");
   disposeProcess(process_);
   state_ = kStopped;
@@ -127,15 +124,35 @@ Player::State Player::state(void) {
 }
 
 void Player::volumeUp(void) {
-  if (NULL == process_) { return; }
   ++volume_;
+  if (NULL == process_) { return; }
   process_->write("+"); //volume up
 }
 
 void Player::volumeDown(void) {
-  if (NULL == process_) { return; }
   --volume_;
-  process_->write("-"); //volume up
+  if (NULL == process_) { return; }
+  process_->write("-"); //volume down
+}
+
+void Player::forward30(void) const {
+  if (NULL == process_) { return; }
+  process_->write("\x1b\x5b\x43"); //forward 30 seconds
+}
+
+void Player::forward600(void) const {
+  if (NULL == process_) { return; }
+  process_->write("\x1b\x5b\x41"); //forward 600 seconds
+}
+
+void Player::rewind30(void) const {
+  if (NULL == process_) { return; }
+  process_->write("\x1b\x5b\x44"); //rewind 30 seconds
+}
+
+void Player::rewind600(void) const {
+  if (NULL == process_) { return; }
+  process_->write("\x1b\x5b\x42"); //rewind 600 seconds
 }
 
 } //end of oas namespace

@@ -21,14 +21,18 @@ struct Player {
   ~Player(void);
   Player(void);
 
+  State state(void);
+  void forward30(void) const;
+  void forward600(void) const;
   void pause(void);
   void play(const char * const);
   void preload(const char * const);
   void resume(void);
+  void rewind30(void) const;
+  void rewind600(void) const;
   void stop(void);
-  void volumeUp(void);
   void volumeDown(void);
-  State state(void);
+  void volumeUp(void);
 };
 
 } //end of oas namespace

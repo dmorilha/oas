@@ -7,7 +7,7 @@
 #include "queue.h"
 #include "tv.h"
 
-static const int TEN_MINUTES = 60 * 10 * 10;
+static const int FIVE_MINUTES = 60 * 5 * 2;
 
 oas::Player player;
 oas::DBUS dbus(&player);
@@ -18,22 +18,34 @@ void loop(void) {
   Queue queue;
   TV tv;
   std::string string;
-  tv.on();
 
-  int secondsToTurnOff = TEN_MINUTES;
+  int secondsToStandBy = FIVE_MINUTES;
 
   while (true) {
+    const TV::State tvState = tv.state();
     if (Player::kPlaying != player.state()) {
-      if (0 == --secondsToTurnOff) {
-        tv.standby();
+      if (TV::kStandby != tvState
+          && 0 == --secondsToStandBy) {
+        const bool result = tv.standby();
+        std::cout << "standby " << (result ? "true" : "false") << std::endl;
       }
     } else {
-      secondsToTurnOff = TEN_MINUTES;
+      if (TV::kOn != tvState) {
+        {
+          const bool result = tv.on();
+          std::cout << "on " << (result ? "true" : "false") << std::endl;
+        }
+        {
+          const bool result = tv.setActiveSource();
+          std::cout << "set active source " << (result ? "true" : "false") << std::endl;
+        }
+      }
+      secondsToStandBy = FIVE_MINUTES;
     }
 
     dbus.processMessages();
 
-    sleep(1);
+    usleep(500000);
   }
 }
 

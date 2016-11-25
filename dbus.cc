@@ -203,5 +203,41 @@ void DBUS::volumeUp(DBusMessage * const m) {
   player_->volumeUp();
 }
 
+void DBUS::forward30(DBusMessage * const m) {
+  std::cout << "forward 30 seconds" << std::endl;
+  assert(NULL != player_);
+  player_->forward30();
+}
+
+void DBUS::forward600(DBusMessage * const m) {
+  std::cout << "forward 600 seconds" << std::endl;
+  assert(NULL != player_);
+  player_->forward600();
+}
+
+void DBUS::resume(DBusMessage * const m) {
+  std::cout << "resume" << std::endl;
+  assert(NULL != player_);
+  player_->resume();
+}
+
+void DBUS::rewind30(DBusMessage * const m) {
+  std::cout << "rewind 30 seconds" << std::endl;
+  assert(NULL != player_);
+  player_->rewind30();
+}
+
+void DBUS::rewind600(DBusMessage * const m) {
+  std::cout << "rewind 600 seconds" << std::endl;
+  assert(NULL != player_);
+  player_->rewind600();
+}
+
+void DBUS::pause(DBusMessage * const m) {
+  std::cout << "pause" << std::endl;
+  assert(NULL != player_);
+  player_->pause();
+}
+
 
 } //end of oas namespace

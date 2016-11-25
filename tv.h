@@ -6,12 +6,24 @@
 namespace oas {
 
 struct TV {
+  enum State {
+    kUndefined,
+    kOn,
+    kStandby,
+  };
+
+  State state_;
+
   CEC::ICECAdapter * adapter_;
 
   ~TV();
   TV(void);
-  void on(void) const;
-  void standby(void) const;
+
+  State state(void) const;
+
+  bool on(void);
+  bool setActiveSource(void) const;
+  bool standby(void);
 };
 
 } //end of oas namespace
