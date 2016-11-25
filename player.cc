@@ -11,7 +11,7 @@ void disposeProcess(Process * & p) {
   p = NULL;
 }
 
-void execute(Process * & p, const char * const v) {
+void execute(Process * & p, const char * const v, const int vo = 0) {
   assert(NULL != v);
 
   if (NULL != p) {
@@ -29,7 +29,7 @@ void execute(Process * & p, const char * const v) {
     "-b",
     "-I",
     "-o", "both",
-    //"-r", //refresh resolution"
+    "-r", //refresh resolution"
     "--audio_queue", "1",
     "--threshold", "10",
     "--timeout", "60",
@@ -39,6 +39,16 @@ void execute(Process * & p, const char * const v) {
   };
 
   p->execute(PLAYER, arguments);
+
+  if (p->exists()) {
+    for (int i = 0; i > vo; --i) {
+      p->write("-");
+    }
+
+    for (int i = 0; i < vo; ++i) {
+      p->write("+");
+    }
+  }
 }
 
 Player::~Player(void) {
@@ -51,10 +61,11 @@ Player::~Player(void) {
   }
 }
 
-Player::Player(void) : state_(kStopped), preloadedProcess_(NULL), process_(NULL) { }
+Player::Player(void) : state_(kStopped), preloadedProcess_(NULL), process_(NULL),
+  volume_(0) { }
 
 void Player::play(const char * const v) {
-  execute(process_, v);
+  execute(process_, v, volume_);
   if ( ! process_->exists()) {
     disposeProcess(process_);
   } else {
@@ -63,7 +74,7 @@ void Player::play(const char * const v) {
 }
 
 void Player::preload(const char * const v) {
-  execute(preloadedProcess_, v);
+  execute(preloadedProcess_, v, volume_);
   assert(NULL != preloadedProcess_);
   preloadedProcess_->write("p"); //pause
 }
@@ -113,6 +124,18 @@ Player::State Player::state(void) {
     }
   }
   return kStopped;
+}
+
+void Player::volumeUp(void) {
+  if (NULL == process_) { return; }
+  ++volume_;
+  process_->write("+"); //volume up
+}
+
+void Player::volumeDown(void) {
+  if (NULL == process_) { return; }
+  --volume_;
+  process_->write("-"); //volume up
 }
 
 } //end of oas namespace

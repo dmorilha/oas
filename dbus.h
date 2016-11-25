@@ -20,6 +20,8 @@ static const char * const DBUS_METHOD_VOID = "oas.method.void";
   V(pushBack, DBUS_METHOD_STRING) \
   V(pushFront, DBUS_METHOD_STRING) \
   V(stop, DBUS_METHOD_VOID) \
+  V(volumeDown, DBUS_METHOD_VOID) \
+  V(volumeUp, DBUS_METHOD_VOID) \
 
 struct DBUS {
   DBusError error_;

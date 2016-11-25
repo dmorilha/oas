@@ -16,6 +16,8 @@ struct Player {
 
   Process * preloadedProcess_, * process_;
 
+  int volume_;
+
   ~Player(void);
   Player(void);
 
@@ -24,6 +26,8 @@ struct Player {
   void preload(const char * const);
   void resume(void);
   void stop(void);
+  void volumeUp(void);
+  void volumeDown(void);
   State state(void);
 };
 

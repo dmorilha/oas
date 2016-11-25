@@ -191,4 +191,17 @@ void DBUS::stop(DBusMessage * const m) {
   player_->stop();
 }
 
+void DBUS::volumeDown(DBusMessage * const m) {
+  std::cout << "volume down" << std::endl;
+  assert(NULL != player_);
+  player_->volumeDown();
+}
+
+void DBUS::volumeUp(DBusMessage * const m) {
+  std::cout << "volume up" << std::endl;
+  assert(NULL != player_);
+  player_->volumeUp();
+}
+
+
 } //end of oas namespace
