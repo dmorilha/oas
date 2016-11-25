@@ -14,31 +14,31 @@ oas::DBUS dbus(&player);
 
 void loop(void) {
   using namespace oas;
+
   Queue queue;
   TV tv;
   std::string string;
   tv.on();
 
-  for (int i = TEN_MINUTES; i > 0; --i) {
-    /*
-    player.play(string.c_str());
-    player.wait();
-    */
+  int secondsToTurnOff = TEN_MINUTES;
+
+  while (true) {
+    if (Player::kPlaying != player.state()) {
+      if (0 == --secondsToTurnOff) {
+        tv.standby();
+      }
+    } else {
+      secondsToTurnOff = TEN_MINUTES;
+    }
+
     dbus.processMessages();
+
     sleep(1);
   }
-
-  //sleep(TEN_MINUTES);
-  tv.standby();
 }
 
 int main(void) {
   std::cout << "omxplayer-dbus" << std::endl;
-  /*
-  FILE * const stream = popen("/usr/bin/omxplayer /home/dmorilha/051\\ -\\ The\\ Contest\\ -\\ [DVD].avi", "we");
-  pclose(stream);
-  loop();
-  */
   dbus.listen();
   loop();
   return 0;
