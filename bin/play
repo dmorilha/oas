@@ -1,2 +1,4 @@
-#!/bin/sh
-dbus-send --system --dest=oas.methods.server --type=method_call / oas.method.string.play "string:`realpath $1;`";
+#!/bin/bash
+echo $1;
+echo `realpath "$1"`;
+dbus-send --system --dest=oas.methods.server --type=method_call / oas.method.string.play "string:`realpath "$1";`";
