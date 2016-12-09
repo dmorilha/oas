@@ -6,6 +6,9 @@
 #include <unistd.h>
 
 #include "dbus.h"
+#include "player.h"
+#include "queue.h"
+#include "tv.h"
 
 /*
 void reply_to_method_call(DBusMessage* msg, DBusConnection* conn) {
@@ -77,9 +80,11 @@ DBUS::~DBUS(void) {
   */
 }
 
-DBUS::DBUS(Player * const p) :
-  player_(p) {
+DBUS::DBUS(Player * const p, Queue * const q, TV * const t) :
+  player_(p), queue_(q), tv_(t) {
   assert(NULL != player_);
+  assert(NULL != queue_);
+  assert(NULL != tv_);
   dbus_error_init(&error_);
   connection_ = dbus_bus_get(DBUS_BUS_SYSTEM, &error_);
   checkErrors("Connection Error");
@@ -163,7 +168,26 @@ void DBUS::play(DBusMessage * const m) {
 
 void DBUS::previous(DBusMessage * const m) { }
 
-void DBUS::pushBack(DBusMessage * const m) { }
+void DBUS::pushBack(DBusMessage * const m) {
+  DBusMessageIter arguments;
+  const char * value = NULL;
+
+  if ( ! dbus_message_iter_init(m, &arguments)) {
+    std::cerr << "Method was called with no parameters" << std::endl;
+
+  } else if (DBUS_TYPE_STRING == dbus_message_iter_get_arg_type(&arguments)) {
+    dbus_message_iter_get_basic(&arguments, &value);
+    //TODO(dmorilha): should be assert?
+    if (NULL != value) {
+      assert(NULL != queue_);
+      queue_->pushBack(value);
+      std::cout << "pushing \"" << value << "\" back" << std::endl;
+    }
+
+  } else {
+    std::cerr << "Argument is not string" << std::endl;
+  }
+}
 
 void DBUS::pushFront(DBusMessage * const m) {
   DBusMessageIter arguments;
@@ -176,8 +200,9 @@ void DBUS::pushFront(DBusMessage * const m) {
     dbus_message_iter_get_basic(&arguments, &value);
     //TODO(dmorilha): should be assert?
     if (NULL != value) {
-      assert(NULL != player_);
-      player_->preload(value);
+      assert(NULL != queue_);
+      queue_->pushFront(value);
+      std::cout << "pushing \"" << value << "\" front" << std::endl;
     }
 
   } else {
@@ -239,5 +264,16 @@ void DBUS::pause(DBusMessage * const m) {
   player_->pause();
 }
 
+void DBUS::turnOn(DBusMessage * const m) {
+  std::cout << "turn on" << std::endl;
+  assert(NULL != tv_);
+  tv_->on();
+}
+
+void DBUS::turnOff(DBusMessage * const m) {
+  std::cout << "turn off" << std::endl;
+  assert(NULL != tv_);
+  tv_->standby();
+}
 
 } //end of oas namespace

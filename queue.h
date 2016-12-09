@@ -11,10 +11,10 @@ struct Queue {
 
   Container queue_, priorityQueue_;
 
-  void push(const char * const);
-  void pushFront(const char * const);
-
+  bool empty(void) const;
   bool next(std::string &);
+  void pushBack(const char * const);
+  void pushFront(const char * const);
 };
 
 } //end of aos namepsace

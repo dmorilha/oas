@@ -1,4 +1,5 @@
 #include <iostream>
+#include <signal.h>
 #include <stdio.h>
 #include <unistd.h>
 
@@ -8,28 +9,51 @@
 #include "tv.h"
 
 static const int FIVE_MINUTES = 60 * 5 * 2;
+static const int TEN_MINUTES = 60 * 10 * 2;
+static const int ONE_MINUTES = 60 * 2;
 
 oas::Player player;
-oas::DBUS dbus(&player);
+oas::Queue queue;
+oas::TV tv;
+
+oas::DBUS dbus(&player, &queue, &tv);
 
 void loop(void) {
   using namespace oas;
 
-  Queue queue;
-  TV tv;
   std::string string;
 
   int secondsToStandBy = FIVE_MINUTES;
+  int counter1 = 0;
 
   while (true) {
+
+    const Player::State playerState = player.state();
     const TV::State tvState = tv.state();
-    if (Player::kPlaying != player.state()) {
+
+    if (counter1++ % ONE_MINUTES == 0) {
+      const TriValue result = tv.pingAdapter();
+      std::cout << "ping returned " << print(result) << std::endl
+        << "player state is " << Player::print(playerState) << std::endl
+        << "tv state is " << TV::print(tvState) << std::endl
+        << std::endl;
+    }
+
+    if (Player::kEnded == playerState
+        && ! queue.empty()) {
+      std::string s;
+      queue.next(s);
+      player.play(s.c_str());
+      std::cout << "playing next item " << s << std::endl;
+
+    } else if (Player::kPlaying != playerState) {
       if (TV::kStandby != tvState
           && 0 == --secondsToStandBy) {
         const bool result = tv.standby();
         std::cout << "standby " << (result ? "true" : "false") << std::endl;
       }
     } else {
+      //There is a problem is tv.on returns false.
       if (TV::kOn != tvState) {
         {
           const bool result = tv.on();
@@ -50,7 +74,7 @@ void loop(void) {
 }
 
 int main(void) {
-  std::cout << "omxplayer-dbus" << std::endl;
+  signal(SIGCHLD, SIG_IGN);
   dbus.listen();
   loop();
   return 0;

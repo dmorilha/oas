@@ -7,10 +7,14 @@ namespace oas {
 
 struct Player {
   enum State {
-    kStopped,
-    kPlaying,
+    kEnded,
     kPaused,
+    kPlaying,
+    kStopped,
+    kUnknown,
   };
+
+  static const char * print(const State);
 
   State state_;
 

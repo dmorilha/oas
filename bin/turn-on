@@ -1,0 +1,2 @@
+#!/bin/bash
+dbus-send --system --dest=oas.methods.server --type=method_call / oas.method.void.turnOn;

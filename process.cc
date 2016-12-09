@@ -89,7 +89,7 @@ bool Process::kill(void) {
 bool Process::exists(void) const {
   if (0 == pid_) { return false; }
   if (::kill(pid_, 0) != 0) {
-    return errno == ESRCH;
+    return errno != ESRCH;
   }
   return true;
 }

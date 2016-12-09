@@ -4,8 +4,6 @@
 #define DBUS_API_SUBJECT_TO_CHANGE
 #include <dbus/dbus.h>
 
-#include "player.h"
-
 namespace oas {
 
 static const char * const DBUS_METHOD_INTEGER = "oas.method.integer";
@@ -28,14 +26,22 @@ static const char * const DBUS_METHOD_VOID = "oas.method.void";
   V(stop, DBUS_METHOD_VOID) \
   V(volumeDown, DBUS_METHOD_VOID) \
   V(volumeUp, DBUS_METHOD_VOID) \
+  V(turnOn, DBUS_METHOD_VOID) \
+  V(turnOff, DBUS_METHOD_VOID) \
+
+struct Player;
+struct Queue;
+struct TV;
 
 struct DBUS {
   DBusError error_;
   DBusConnection * connection_;
-  Player * player_;
+  Player * const player_;
+  Queue * const queue_;
+  TV * const tv_;
 
   ~DBUS(void);
-  DBUS(Player * const);
+  DBUS(Player * const, Queue * const, TV * const);
 
   void listen(void);
   void processMessages(void);

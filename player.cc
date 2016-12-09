@@ -5,6 +5,22 @@
 
 namespace oas {
 
+const char * Player::print(const State s) {
+  switch (s) {
+  case kEnded:
+    return "ended";
+  case kPaused:
+    return "paused";
+  case kPlaying:
+    return "playing";
+  case kStopped:
+    return "stopped";
+  case kUnknown:
+  default:
+    return "unknown";
+  }
+}
+
 void disposeProcess(Process * & p) {
   assert(NULL != p);
   p->kill();
@@ -58,7 +74,7 @@ Player::~Player(void) {
   }
 }
 
-Player::Player(void) : state_(kStopped), preloadedProcess_(NULL), process_(NULL),
+Player::Player(void) : state_(kEnded), preloadedProcess_(NULL), process_(NULL),
   volume_(0) { }
 
 void Player::play(const char * const v) {
@@ -79,6 +95,7 @@ void Player::preload(const char * const v) {
 void Player::stop(void) {
   if (NULL == process_) { return; }
   if (kStopped == state_) { return; }
+  if (kEnded == state_) { return; }
   process_->write("q");
   disposeProcess(process_);
   state_ = kStopped;
@@ -111,16 +128,14 @@ Player::State Player::state(void) {
     case kPaused:
     case kPlaying:
       if ( ! process_->exists()) {
-        state_ = kStopped;
-      } else {
-        return state_;
+        state_ = kEnded;
       }
       break;
     default:
       break;
     }
   }
-  return kStopped;
+  return state_;
 }
 
 void Player::volumeUp(void) {
