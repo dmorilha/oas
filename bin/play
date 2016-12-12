@@ -13,6 +13,7 @@ esac
 location="$1"
 path=`realpath "$location";`
 if [[ -n "$path" ]]; then
+  location="$path"
   file=`file -bi "$path" 2>/dev/null;`
   if [[ "$file" == "audio/"* ]]; then
     type='audio';
