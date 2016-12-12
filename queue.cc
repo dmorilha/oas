@@ -6,12 +6,12 @@ bool Queue::empty(void) const {
   return priorityQueue_.empty() && queue_.empty();
 }
 
-bool Queue::next(std::string & s) {
+bool Queue::next(Media & m) {
   if ( ! priorityQueue_.empty()) {
-    s.swap(priorityQueue_.back());
+    m.swap(priorityQueue_.back());
     priorityQueue_.pop_back();
   } else if ( ! queue_.empty()) {
-    s.swap(queue_.back());
+    m.swap(queue_.back());
     queue_.pop_back();
   } else {
     return false;
@@ -19,12 +19,16 @@ bool Queue::next(std::string & s) {
   return true;
 }
 
-void Queue::pushBack(const char * const s) {
-  queue_.push_back(s);
+void Queue::pushBack(const Media & m) {
+  queue_.push_back(m);
 }
 
-void Queue::pushFront(const char * const s) {
-  priorityQueue_.push_back(s);
+void Queue::pushFront(const Media & m) {
+  priorityQueue_.push_back(m);
+}
+
+size_t Queue::size(void) const {
+  return priorityQueue_.size() + queue_.size();
 }
 
 } //end of aos namepsace

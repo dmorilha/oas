@@ -1,4 +1,24 @@
 #!/bin/bash
-echo $1;
-echo `realpath "$1"`;
-dbus-send --system --dest=oas.methods.server --type=method_call / oas.method.string.play "string:`realpath "$1";`";
+case `basename $0` in
+"play")
+  method="oas.method.string.play"
+  ;;
+"push-back")
+  method="oas.method.string.pushBack"
+  ;;
+"push-front")
+  method="oas.method.string.pushFront"
+  ;;
+esac
+location="$1"
+path=`realpath "$location";`
+if [[ -n "$path" ]]; then
+  file=`file -bi "$path" 2>/dev/null;`
+  if [[ "$file" == "audio/"* ]]; then
+    type='audio';
+  elif [[ "$file" == "video/"* ]]; then
+    type='video';
+  fi
+fi;
+echo dbus-send --system --dest=oas.methods.server --type=method_call / $method "string:$location" "string:$type";
+dbus-send --system --dest=oas.methods.server --type=method_call / $method "string:$location" "string:$type";

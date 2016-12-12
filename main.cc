@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <iostream>
 #include <signal.h>
 #include <stdio.h>
@@ -41,10 +42,10 @@ void loop(void) {
 
     if (Player::kEnded == playerState
         && ! queue.empty()) {
-      std::string s;
-      queue.next(s);
-      player.play(s.c_str());
-      std::cout << "playing next item " << s << std::endl;
+      Media m;
+      queue.next(m);
+      player.play(m);
+      std::cout << "playing next item " << m.location() << std::endl;
 
     } else if (Player::kPlaying != playerState) {
       if (TV::kStandby != tvState
@@ -54,7 +55,9 @@ void loop(void) {
       }
     } else {
       //There is a problem is tv.on returns false.
-      if (TV::kOn != tvState) {
+      const Media * const media = player.media();
+      assert(NULL != media);
+      if (TV::kOn != tvState && media->type() != Media::kAudio) {
         {
           const bool result = tv.on();
           std::cout << "on " << (result ? "true" : "false") << std::endl;

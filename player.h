@@ -1,24 +1,26 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include "media.h"
 #include "process.h"
 
 namespace oas {
 
 struct Player {
   enum State {
+    kUnknown,
     kEnded,
     kPaused,
     kPlaying,
     kStopped,
-    kUnknown,
   };
 
   static const char * print(const State);
 
   State state_;
 
-  Process * preloadedProcess_, * process_;
+  Process * process_;
+  Media * media_;
 
   int volume_;
 
@@ -26,11 +28,12 @@ struct Player {
   Player(void);
 
   State state(void);
+  const Media * media(void) const;
+
   void forward30(void) const;
   void forward600(void) const;
   void pause(void);
-  void play(const char * const);
-  void preload(const char * const);
+  void play(const Media &);
   void resume(void);
   void rewind30(void) const;
   void rewind600(void) const;

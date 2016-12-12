@@ -65,31 +65,30 @@ void execute(Process * & p, const char * const v, const int vo = 0) {
 }
 
 Player::~Player(void) {
-  if (NULL != preloadedProcess_) {
-    disposeProcess(preloadedProcess_);
-  }
-
   if (NULL != process_) {
     disposeProcess(process_);
   }
+
+  if (NULL != media_) {
+    delete media_;
+  }
 }
 
-Player::Player(void) : state_(kEnded), preloadedProcess_(NULL), process_(NULL),
-  volume_(0) { }
+Player::Player(void) : state_(kEnded), process_(NULL),
+  media_(NULL), volume_(0) { }
 
-void Player::play(const char * const v) {
-  execute(process_, v, volume_);
+void Player::play(const Media & m) {
+  assert(NULL != m.location());
+  if (NULL != media_) {
+    delete media_;
+  }
+  media_ = new Media(m);
+  execute(process_, media_->location(), volume_);
   if ( ! process_->exists()) {
     disposeProcess(process_);
   } else {
     state_ = kPlaying;
   }
-}
-
-void Player::preload(const char * const v) {
-  execute(preloadedProcess_, v, volume_);
-  assert(NULL != preloadedProcess_);
-  preloadedProcess_->write("p"); //pause
 }
 
 void Player::stop(void) {
@@ -99,13 +98,6 @@ void Player::stop(void) {
   process_->write("q");
   disposeProcess(process_);
   state_ = kStopped;
-
-  //TODO(dmorilha): should this be only on next?
-  if (NULL != preloadedProcess_) {
-    process_ = preloadedProcess_;
-    preloadedProcess_ = NULL;
-    process_->write("p"); //resume
-  }
 }
 
 void Player::pause(void) {
@@ -136,6 +128,10 @@ Player::State Player::state(void) {
     }
   }
   return state_;
+}
+
+const Media * Player::media(void) const {
+  return media_;
 }
 
 void Player::volumeUp(void) {

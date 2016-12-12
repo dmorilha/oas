@@ -146,67 +146,58 @@ void DBUS::clear(DBusMessage * const m) { }
 
 void DBUS::next(DBusMessage * const m) { }
 
-void DBUS::play(DBusMessage * const m) {
+bool parseMediaArguments(DBusMessage * const m, Media & me) {
   DBusMessageIter arguments;
-  const char * value = NULL;
 
   if ( ! dbus_message_iter_init(m, &arguments)) {
     std::cerr << "Method was called with no parameters" << std::endl;
 
   } else if (DBUS_TYPE_STRING == dbus_message_iter_get_arg_type(&arguments)) {
-    dbus_message_iter_get_basic(&arguments, &value);
-    //TODO(dmorilha): should be assert?
-    if (NULL != value) {
-      assert(NULL != player_);
-      player_->play(value);
+    const char * location = NULL;
+    dbus_message_iter_get_basic(&arguments, &location);
+
+    if (NULL != location) {
+      const char * type = NULL;
+      if (dbus_message_iter_next(&arguments)) {
+        if (DBUS_TYPE_STRING == dbus_message_iter_get_arg_type(&arguments)) {
+          dbus_message_iter_get_basic(&arguments, &type);
+          //TODO(dmorilha): should be assert?
+        }
+      }
+
+      me = Media(location, Media::fromString(type));
+      return true;
     }
 
   } else {
-    std::cerr << "Argument is not string" << std::endl;
+    std::cerr << "First argument is not string" << std::endl;
+  }
+  return false;
+}
+
+void DBUS::play(DBusMessage * const m) {
+  Media media;
+  if (parseMediaArguments(m, media)) {
+    assert(NULL != player_);
+    player_->play(media);
   }
 }
 
 void DBUS::previous(DBusMessage * const m) { }
 
 void DBUS::pushBack(DBusMessage * const m) {
-  DBusMessageIter arguments;
-  const char * value = NULL;
-
-  if ( ! dbus_message_iter_init(m, &arguments)) {
-    std::cerr << "Method was called with no parameters" << std::endl;
-
-  } else if (DBUS_TYPE_STRING == dbus_message_iter_get_arg_type(&arguments)) {
-    dbus_message_iter_get_basic(&arguments, &value);
-    //TODO(dmorilha): should be assert?
-    if (NULL != value) {
-      assert(NULL != queue_);
-      queue_->pushBack(value);
-      std::cout << "pushing \"" << value << "\" back" << std::endl;
-    }
-
-  } else {
-    std::cerr << "Argument is not string" << std::endl;
+  Media media;
+  if (parseMediaArguments(m, media)) {
+    assert(NULL != queue_);
+    queue_->pushBack(media);
   }
 }
 
 void DBUS::pushFront(DBusMessage * const m) {
-  DBusMessageIter arguments;
-  const char * value = NULL;
-
-  if ( ! dbus_message_iter_init(m, &arguments)) {
-    std::cerr << "Method was called with no parameters" << std::endl;
-
-  } else if (DBUS_TYPE_STRING == dbus_message_iter_get_arg_type(&arguments)) {
-    dbus_message_iter_get_basic(&arguments, &value);
-    //TODO(dmorilha): should be assert?
-    if (NULL != value) {
-      assert(NULL != queue_);
-      queue_->pushFront(value);
-      std::cout << "pushing \"" << value << "\" front" << std::endl;
-    }
-
-  } else {
-    std::cerr << "Argument is not string" << std::endl;
+  Media media;
+  if (parseMediaArguments(m, media)) {
+    assert(NULL != queue_);
+    queue_->pushFront(media);
   }
 }
 
