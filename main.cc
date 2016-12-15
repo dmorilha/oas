@@ -32,6 +32,7 @@ void loop(void) {
     const Player::State playerState = player.state();
     const TV::State tvState = tv.state();
 
+    /*
     if (counter1++ % ONE_MINUTES == 0) {
       const TriValue result = tv.pingAdapter();
       std::cout << "ping returned " << print(result) << std::endl
@@ -39,6 +40,7 @@ void loop(void) {
         << "tv state is " << TV::print(tvState) << std::endl
         << std::endl;
     }
+    */
 
     if (Player::kEnded == playerState
         && ! queue.empty()) {

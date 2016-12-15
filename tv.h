@@ -7,6 +7,8 @@
 
 namespace oas {
 
+struct Adapter;
+
 struct TV {
   enum State {
     kUnknown,
@@ -18,7 +20,7 @@ struct TV {
 
   State state_;
 
-  CEC::ICECAdapter * adapter_;
+  Adapter * const adapter_;
 
   const CEC::cec_logical_address logicalAddress_;
 
