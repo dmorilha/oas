@@ -1,11 +1,10 @@
-#ifndef MY_DBUS_H
-#define MY_DBUS_H
+#ifndef DBUS_HANDLER_H
+#define DBUS_HANDLER_H
 
 #define DBUS_API_SUBJECT_TO_CHANGE
 #include <dbus/dbus.h>
 
 namespace oas {
-
 static const char * const DBUS_METHOD_INTEGER = "oas.method.integer";
 static const char * const DBUS_METHOD_STRING = "oas.method.string";
 static const char * const DBUS_METHOD_VOID = "oas.method.void";
@@ -20,6 +19,7 @@ static const char * const DBUS_METHOD_VOID = "oas.method.void";
   V(previous, DBUS_METHOD_VOID) \
   V(pushBack, DBUS_METHOD_STRING) \
   V(pushFront, DBUS_METHOD_STRING) \
+  V(repeat, DBUS_METHOD_VOID) \
   V(resume, DBUS_METHOD_VOID) \
   V(rewind30, DBUS_METHOD_VOID) \
   V(rewind600, DBUS_METHOD_VOID) \
@@ -56,4 +56,4 @@ DBUS_METHOD_LIST(DBUS_METHOD_DECLARATION)
 };
 } //end of oas namespace
 
-#endif //MY_DBUS_H
+#endif //DBUS_HANDLER_H

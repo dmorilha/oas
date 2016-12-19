@@ -17,6 +17,7 @@ struct Media {
 
   std::string location_;
   Type type_;
+  int repeat_;
 
   Media(void);
   Media(const char * const, const Type t = kUndefined);
@@ -25,6 +26,9 @@ struct Media {
 
   const char * location(void) const;
   Type type(void) const;
+  void repeat(const int i = 1);
+  int repeating(void);
+
 };
 
 } //end of oas namespace

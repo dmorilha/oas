@@ -7,6 +7,8 @@ namespace oas {
 
 const char * Player::print(const State s) {
   switch (s) {
+  case kCrashed:
+    return "crashed";
   case kEnded:
     return "ended";
   case kPaused:
@@ -23,7 +25,7 @@ const char * Player::print(const State s) {
 
 void disposeProcess(Process * & p) {
   assert(NULL != p);
-  p->kill();
+  //p->kill();
   delete p;
   p = NULL;
 }
@@ -78,11 +80,21 @@ Player::Player(void) : state_(kEnded), process_(NULL),
   media_(NULL), volume_(0) { }
 
 void Player::play(const Media & m) {
-  assert(NULL != m.location());
-  if (NULL != media_) {
-    delete media_;
+  const State s = state();
+  if (kPlaying == s || kPaused == s) {
+    assert(NULL != process_);
+    stop();
   }
-  media_ = new Media(m);
+
+  //addressing repeat
+  if (&m != media_) {
+    assert(NULL != m.location());
+    if (NULL != media_) {
+      delete media_;
+    }
+    media_ = new Media(m);
+  }
+
   execute(process_, media_->location(), volume_);
   if ( ! process_->exists()) {
     disposeProcess(process_);
@@ -91,18 +103,27 @@ void Player::play(const Media & m) {
   }
 }
 
+void Player::end(void) {
+  if (NULL == process_) {
+    process_->write("q");
+    disposeProcess(process_);
+  }
+  state_ = kEnded;
+}
+
 void Player::stop(void) {
-  if (NULL == process_) { return; }
-  if (kStopped == state_) { return; }
-  if (kEnded == state_) { return; }
+  const State s = state();
+  if (NULL == process_ || kStopped == s || kEnded == s) {
+    return;
+  }
   process_->write("q");
-  disposeProcess(process_);
   state_ = kStopped;
+  disposeProcess(process_);
 }
 
 void Player::pause(void) {
   if (NULL == process_) { return; }
-  if (kPlaying != state_) { return; }
+  if (kPlaying != state()) { return; }
   process_->write("p"); //pause
   state_ = kPaused;
 }
@@ -118,11 +139,23 @@ Player::State Player::state(void) {
   if (NULL != process_) {
     switch (state_) {
     case kPaused:
+      if ( ! process_->exists()) {
+        state_ = kCrashed;
+      }
+      break;
+
     case kPlaying:
       if ( ! process_->exists()) {
         state_ = kEnded;
+        assert(NULL != media_);
+        const int repeat = media_->repeating();
+        if (0 < repeat) {
+          std::cout << "repeating " << repeat << std::endl;
+          play(*media_);
+        }
       }
       break;
+
     default:
       break;
     }
@@ -130,7 +163,7 @@ Player::State Player::state(void) {
   return state_;
 }
 
-const Media * Player::media(void) const {
+Media * Player::media(void) const {
   return media_;
 }
 

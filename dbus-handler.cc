@@ -5,55 +5,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "dbus.h"
+#include "dbus-handler.h"
 #include "player.h"
 #include "queue.h"
 #include "tv.h"
-
-/*
-void reply_to_method_call(DBusMessage* msg, DBusConnection* conn) {
-   DBusMessage* reply;
-   DBusMessageIter args;
-   bool stat = true;
-   dbus_uint32_t level = 21614;
-   dbus_uint32_t serial = 0;
-   char* param = "";
-
-   // read the arguments
-   if (!dbus_message_iter_init(msg, &args))
-      fprintf(stderr, "Message has no arguments!\n");
-   else if (DBUS_TYPE_STRING != dbus_message_iter_get_arg_type(&args))
-      fprintf(stderr, "Argument is not string!\n");
-   else
-      dbus_message_iter_get_basic(&args, &param);
-
-   printf("Method called with %s\n", param);
-
-   // create a reply from the message
-   reply = dbus_message_new_method_return(msg);
-
-   // add the arguments to the reply
-   dbus_message_iter_init_append(reply, &args);
-   if (!dbus_message_iter_append_basic(&args, DBUS_TYPE_BOOLEAN, &stat)) {
-      fprintf(stderr, "Out Of Memory!\n");
-      exit(1);
-   }
-   if (!dbus_message_iter_append_basic(&args, DBUS_TYPE_UINT32, &level)) {
-      fprintf(stderr, "Out Of Memory!\n");
-      exit(1);
-   }
-
-   // send the reply && flush the connection
-   if (!dbus_connection_send(conn, reply, &serial)) {
-      fprintf(stderr, "Out Of Memory!\n");
-      exit(1);
-   }
-   dbus_connection_flush(conn);
-
-   // free the reply
-   dbus_message_unref(reply);
-}
-*/
 
 namespace oas {
 
@@ -142,9 +97,20 @@ void DBUS::processMessages(void) {
   }
 }
 
-void DBUS::clear(DBusMessage * const m) { }
+void DBUS::clear(DBusMessage * const m) {
+  std::cout << "clear" << std::endl;
+  assert(NULL != queue_);
+  queue_->clear();
+}
 
-void DBUS::next(DBusMessage * const m) { }
+void DBUS::next(DBusMessage * const m) {
+  std::cout << "next" << std::endl;
+  assert(NULL != queue_);
+  if ( ! queue_->empty()) {
+    assert(NULL != player_);
+    player_->end();
+  }
+}
 
 bool parseMediaArguments(DBusMessage * const m, Media & me) {
   DBusMessageIter arguments;
@@ -189,7 +155,12 @@ void DBUS::pushBack(DBusMessage * const m) {
   Media media;
   if (parseMediaArguments(m, media)) {
     assert(NULL != queue_);
-    queue_->pushBack(media);
+    assert(NULL != player_);
+    if (Player::kStopped == player_->state() && queue_->empty()) {
+      player_->play(media);
+    } else {
+      queue_->pushBack(media);
+    }
   }
 }
 
@@ -197,7 +168,12 @@ void DBUS::pushFront(DBusMessage * const m) {
   Media media;
   if (parseMediaArguments(m, media)) {
     assert(NULL != queue_);
-    queue_->pushFront(media);
+    assert(NULL != player_);
+    if (Player::kStopped == player_->state() && queue_->empty()) {
+      player_->play(media);
+    } else {
+      queue_->pushFront(media);
+    }
   }
 }
 
@@ -229,6 +205,15 @@ void DBUS::forward600(DBusMessage * const m) {
   std::cout << "forward 600 seconds" << std::endl;
   assert(NULL != player_);
   player_->forward600();
+}
+
+void DBUS::repeat(DBusMessage * const m) {
+  std::cout << "repeat" << std::endl;
+  assert(NULL != player_);
+  Media * const media = player_->media();
+  if (NULL != media) {
+    media->repeat();
+  }
 }
 
 void DBUS::resume(DBusMessage * const m) {

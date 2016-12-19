@@ -11,8 +11,8 @@ bool Queue::next(Media & m) {
     m.swap(priorityQueue_.back());
     priorityQueue_.pop_back();
   } else if ( ! queue_.empty()) {
-    m.swap(queue_.back());
-    queue_.pop_back();
+    m.swap(queue_.front());
+    queue_.pop_front();
   } else {
     return false;
   }
@@ -29,6 +29,11 @@ void Queue::pushFront(const Media & m) {
 
 size_t Queue::size(void) const {
   return priorityQueue_.size() + queue_.size();
+}
+
+void Queue::clear(void) {
+  priorityQueue_.clear();
+  queue_.clear();
 }
 
 } //end of aos namepsace

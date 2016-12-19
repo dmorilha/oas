@@ -1,25 +1,39 @@
 #!/bin/bash
+
+IFS=$'\n';
+
+func () {
+  location="$2"
+  path=`realpath "$location";`
+  if [[ -n "$path" ]]; then
+    location="$path"
+    file=`file -bi "$path" 2>/dev/null;`
+    if [[ "$file" == "audio/"* ]]; then
+      type='audio';
+    elif [[ "$file" == "video/"* ]]; then
+      type='video';
+    fi
+  fi;
+  echo dbus-send --system --dest=oas.methods.server --type=method_call / $1 "string:$location" "string:$type";
+  dbus-send --system --dest=oas.methods.server --type=method_call / $1 "string:$location" "string:$type";
+}
+
 case `basename $0` in
 "play")
-  method="oas.method.string.play"
-  ;;
-"push-back")
-  method="oas.method.string.pushBack"
+  func "oas.method.string.play" $1;
+  shift 1;
+  for i in `for j in $@; do echo $j; done | tac`; do
+    func "oas.method.string.pushFront" $i;
+  done
   ;;
 "push-front")
-  method="oas.method.string.pushFront"
+  for i in `for j in $@; do; echo $j; done | tac`; do
+    func "oas.method.string.pushFront" $i;
+  done
+  ;;
+"push-back")
+  for i in $@; do
+    func "oas.method.string.pushBack" $i;
+  done;
   ;;
 esac
-location="$1"
-path=`realpath "$location";`
-if [[ -n "$path" ]]; then
-  location="$path"
-  file=`file -bi "$path" 2>/dev/null;`
-  if [[ "$file" == "audio/"* ]]; then
-    type='audio';
-  elif [[ "$file" == "video/"* ]]; then
-    type='video';
-  fi
-fi;
-echo dbus-send --system --dest=oas.methods.server --type=method_call / $method "string:$location" "string:$type";
-dbus-send --system --dest=oas.methods.server --type=method_call / $method "string:$location" "string:$type";

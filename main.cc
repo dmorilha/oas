@@ -4,14 +4,15 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#include "dbus.h"
+#include "dbus-handler.h"
+#include "media.h"
 #include "player.h"
 #include "queue.h"
 #include "tv.h"
 
 static const int FIVE_MINUTES = 60 * 5 * 2;
 static const int TEN_MINUTES = 60 * 10 * 2;
-static const int ONE_MINUTES = 60 * 2;
+static const int ONE_MINUTE = 60 * 2;
 
 oas::Player player;
 oas::Queue queue;
@@ -28,9 +29,17 @@ void loop(void) {
   int counter1 = 0;
 
   while (true) {
-
     const Player::State playerState = player.state();
     const TV::State tvState = tv.state();
+    Media::Type mediaType = Media::kUndefined;
+
+    if (Player::kPlaying == playerState) {
+      const Media * const media = player.media();
+      assert(NULL != media);
+      mediaType = media->type();
+    }
+
+    const bool isAudio = Media::kAudio == mediaType;
 
     /*
     if (counter1++ % ONE_MINUTES == 0) {
@@ -49,17 +58,26 @@ void loop(void) {
       player.play(m);
       std::cout << "playing next item " << m.location() << std::endl;
 
-    } else if (Player::kPlaying != playerState) {
-      if (TV::kStandby != tvState
-          && 0 == --secondsToStandBy) {
-        const bool result = tv.standby();
-        std::cout << "standby " << (result ? "true" : "false") << std::endl;
+    } else if (Player::kPlaying != playerState || isAudio) {
+      if (TV::kStandby != tvState) {
+        --secondsToStandBy;
+        if (0 == secondsToStandBy) {
+          tv.standby();
+          std::cout << "standby " << std::endl;
+        } else if (0 == secondsToStandBy % ONE_MINUTE) {
+          std::cout << (secondsToStandBy / 2)
+            << " to go to standby" << std::endl;
+        }
       }
+
+    } else if (Player::kPlaying != playerState) {
+      //good for listening...
+
     } else {
       //There is a problem is tv.on returns false.
       const Media * const media = player.media();
       assert(NULL != media);
-      if (TV::kOn != tvState && media->type() != Media::kAudio) {
+      if (TV::kOn != tvState && isAudio) {
         {
           const bool result = tv.on();
           std::cout << "on " << (result ? "true" : "false") << std::endl;
@@ -73,7 +91,6 @@ void loop(void) {
     }
 
     dbus.processMessages();
-
     usleep(500000);
   }
 }

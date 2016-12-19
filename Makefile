@@ -53,4 +53,4 @@ lines:
 	wc -l *.cc *.h;
 
 clean:
-	@rm -fv *.o $(BIN)
+	@rm -fv *.o *.d $(BIN)

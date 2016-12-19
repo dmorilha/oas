@@ -28,10 +28,10 @@ Media::Type Media::fromString(const char * const s) {
   return Media::kUndefined;
 }
 
-Media::Media(void) { }
+Media::Media(void) : type_(kUndefined), repeat_(0) { }
 
 Media::Media(const char * const l, const Type t) :
-  location_(l), type_(t) { }
+  location_(l), type_(t), repeat_(0) { }
 
 void Media::swap(Media & m) {
   location_.swap(m.location_);
@@ -41,6 +41,12 @@ void Media::swap(Media & m) {
     m.type_ = type_;
     type_ = t;
   }
+
+  {
+    const int r = m.repeat_;
+    m.repeat_ = repeat_;
+    repeat_ = r;
+  }
 }
 
 const char * Media::location(void) const {
@@ -49,6 +55,14 @@ const char * Media::location(void) const {
 
 Media::Type Media::type(void) const {
   return type_;
+}
+
+void Media::repeat(const int i) {
+  repeat_ += i;
+}
+
+int Media::repeating(void) {
+  return repeat_--;
 }
 
 } //end of oas namespace

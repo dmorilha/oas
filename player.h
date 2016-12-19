@@ -9,6 +9,7 @@ namespace oas {
 struct Player {
   enum State {
     kUnknown,
+    kCrashed,
     kEnded,
     kPaused,
     kPlaying,
@@ -20,6 +21,7 @@ struct Player {
   State state_;
 
   Process * process_;
+  //dbus::Connection * dbus_;
   Media * media_;
 
   int volume_;
@@ -28,8 +30,9 @@ struct Player {
   Player(void);
 
   State state(void);
-  const Media * media(void) const;
+  Media * media(void) const;
 
+  void end(void);
   void forward30(void) const;
   void forward600(void) const;
   void pause(void);

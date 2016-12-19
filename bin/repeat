@@ -1,0 +1,22 @@
+#!/bin/bash
+case `basename $0` in
+"clear")
+  method="oas.method.void.clear"
+  ;;
+"next")
+  method="oas.method.void.next"
+  ;;
+"resume")
+  method="oas.method.void.resume"
+  ;;
+"pause")
+  method="oas.method.void.pause"
+  ;;
+"repeat")
+  method="oas.method.void.repeat"
+  ;;
+"stop")
+  method="oas.method.void.stop"
+  ;;
+esac
+dbus-send --system --dest=oas.methods.server --type=method_call / "$method";
