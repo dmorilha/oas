@@ -13,6 +13,8 @@ static const char * const DBUS_METHOD_VOID = "oas.method.void";
   V(clear, DBUS_METHOD_VOID) \
   V(forward30, DBUS_METHOD_VOID) \
   V(forward600, DBUS_METHOD_VOID) \
+  V(lightsOn, DBUS_METHOD_VOID) \
+  V(lightsOff, DBUS_METHOD_VOID) \
   V(next, DBUS_METHOD_VOID) \
   V(pause, DBUS_METHOD_VOID) \
   V(play, DBUS_METHOD_STRING) \
@@ -26,9 +28,10 @@ static const char * const DBUS_METHOD_VOID = "oas.method.void";
   V(stop, DBUS_METHOD_VOID) \
   V(volumeDown, DBUS_METHOD_VOID) \
   V(volumeUp, DBUS_METHOD_VOID) \
-  V(turnOn, DBUS_METHOD_VOID) \
-  V(turnOff, DBUS_METHOD_VOID) \
+  V(tvOn, DBUS_METHOD_VOID) \
+  V(tvOff, DBUS_METHOD_VOID) \
 
+struct Lights;
 struct Player;
 struct Queue;
 struct TV;
@@ -39,9 +42,11 @@ struct DBUS {
   Player * const player_;
   Queue * const queue_;
   TV * const tv_;
+  Lights * const lights_;
 
   ~DBUS(void);
-  DBUS(Player * const, Queue * const, TV * const);
+  DBUS(Player * const, Queue * const, TV * const t = NULL,
+      Lights * const l = NULL);
 
   void listen(void);
   void processMessages(void);

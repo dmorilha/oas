@@ -6,6 +6,7 @@
 #include <unistd.h>
 
 #include "dbus-handler.h"
+#include "lights.h"
 #include "player.h"
 #include "queue.h"
 #include "tv.h"
@@ -35,11 +36,10 @@ DBUS::~DBUS(void) {
   */
 }
 
-DBUS::DBUS(Player * const p, Queue * const q, TV * const t) :
-  player_(p), queue_(q), tv_(t) {
+DBUS::DBUS(Player * const p, Queue * const q, TV * const t, Lights * const l) :
+  player_(p), queue_(q), tv_(t), lights_(l) {
   assert(NULL != player_);
   assert(NULL != queue_);
-  assert(NULL != tv_);
   dbus_error_init(&error_);
   connection_ = dbus_bus_get(DBUS_BUS_SYSTEM, &error_);
   checkErrors("Connection Error");
@@ -240,16 +240,32 @@ void DBUS::pause(DBusMessage * const m) {
   player_->pause();
 }
 
-void DBUS::turnOn(DBusMessage * const m) {
-  std::cout << "turn on" << std::endl;
-  assert(NULL != tv_);
-  tv_->on();
+void DBUS::tvOn(DBusMessage * const m) {
+  if (NULL != tv_) {
+    std::cout << "turn on" << std::endl;
+    tv_->on();
+  }
 }
 
-void DBUS::turnOff(DBusMessage * const m) {
-  std::cout << "turn off" << std::endl;
-  assert(NULL != tv_);
-  tv_->standby();
+void DBUS::tvOff(DBusMessage * const m) {
+  if (NULL != tv_) {
+    std::cout << "tv off" << std::endl;
+    tv_->standby();
+  }
+}
+
+void DBUS::lightsOn(DBusMessage * const s) {
+  if (NULL != lights_) {
+    std::cout << "lights on" << std::endl;
+    lights_->on();
+  }
+}
+
+void DBUS::lightsOff(DBusMessage * const s) {
+  if (NULL != lights_) {
+    std::cout << "lights off" << std::endl;
+    lights_->off();
+  }
 }
 
 } //end of oas namespace

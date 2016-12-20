@@ -1,2 +1,1 @@
-#!/bin/sh
-dbus-send --system --dest=oas.methods.server --type=method_call / oas.method.void.volumeUp;
+repeat

@@ -96,6 +96,7 @@ void Player::play(const Media & m) {
   }
 
   execute(process_, media_->location(), volume_);
+
   if ( ! process_->exists()) {
     disposeProcess(process_);
   } else {

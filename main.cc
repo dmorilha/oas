@@ -5,6 +5,7 @@
 #include <unistd.h>
 
 #include "dbus-handler.h"
+#include "hs200.h"
 #include "media.h"
 #include "player.h"
 #include "queue.h"
@@ -17,8 +18,9 @@ static const int ONE_MINUTE = 60 * 2;
 oas::Player player;
 oas::Queue queue;
 oas::TV tv;
+oas::HS200 lights("192.168.1.89");
 
-oas::DBUS dbus(&player, &queue, &tv);
+oas::DBUS dbus(&player, &queue, &tv, &lights);
 
 void loop(void) {
   using namespace oas;
