@@ -105,7 +105,7 @@ void Player::play(const Media & m) {
 }
 
 void Player::end(void) {
-  if (NULL == process_) {
+  if (NULL != process_) {
     process_->write("q");
     disposeProcess(process_);
   }

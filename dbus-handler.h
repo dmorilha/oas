@@ -31,22 +31,15 @@ static const char * const DBUS_METHOD_VOID = "oas.method.void";
   V(tvOn, DBUS_METHOD_VOID) \
   V(tvOff, DBUS_METHOD_VOID) \
 
-struct Lights;
-struct Player;
-struct Queue;
-struct TV;
+struct Controller;
 
 struct DBUS {
   DBusError error_;
   DBusConnection * connection_;
-  Player * const player_;
-  Queue * const queue_;
-  TV * const tv_;
-  Lights * const lights_;
+  Controller * const controller_;
 
   ~DBUS(void);
-  DBUS(Player * const, Queue * const, TV * const t = NULL,
-      Lights * const l = NULL);
+  DBUS(Controller * const);
 
   void listen(void);
   void processMessages(void);

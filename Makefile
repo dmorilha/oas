@@ -5,9 +5,10 @@ YAML_CPP_PATH ?= ../yaml-cpp
 CXXFLAGS += -g --std=c++11 -fPIC
 CXXFLAGS += -Wall -Wno-deprecated-declarations
 CXXFLAGS += -MMD
-CXXFLAGS += $(shell pkg-config --cflags dbus-1 libcec;)
+CXXFLAGS += $(shell pkg-config --cflags dbus-1 libcec sphinxbase pocketsphinx;)
+CXXFLAGS += -DMODELDIR=\"/usr/share/pocketsphinx/model/\"
 
-LDFLAGS += $(shell pkg-config --libs dbus-1 libcec;)
+LDFLAGS += $(shell pkg-config --libs dbus-1 libcec sphinxbase pocketsphinx;)
 LDFLAGS += -rdynamic
 
 GDB ?= gdb

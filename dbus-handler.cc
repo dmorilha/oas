@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include "controller.h"
 #include "dbus-handler.h"
 #include "lights.h"
 #include "player.h"
@@ -36,10 +37,9 @@ DBUS::~DBUS(void) {
   */
 }
 
-DBUS::DBUS(Player * const p, Queue * const q, TV * const t, Lights * const l) :
-  player_(p), queue_(q), tv_(t), lights_(l) {
-  assert(NULL != player_);
-  assert(NULL != queue_);
+DBUS::DBUS(Controller * const c) :
+  controller_(c) {
+  assert(NULL != controller_);
   dbus_error_init(&error_);
   connection_ = dbus_bus_get(DBUS_BUS_SYSTEM, &error_);
   checkErrors("Connection Error");
@@ -97,21 +97,6 @@ void DBUS::processMessages(void) {
   }
 }
 
-void DBUS::clear(DBusMessage * const m) {
-  std::cout << "clear" << std::endl;
-  assert(NULL != queue_);
-  queue_->clear();
-}
-
-void DBUS::next(DBusMessage * const m) {
-  std::cout << "next" << std::endl;
-  assert(NULL != queue_);
-  if ( ! queue_->empty()) {
-    assert(NULL != player_);
-    player_->end();
-  }
-}
-
 bool parseMediaArguments(DBusMessage * const m, Media & me) {
   DBusMessageIter arguments;
 
@@ -144,128 +129,111 @@ bool parseMediaArguments(DBusMessage * const m, Media & me) {
 void DBUS::play(DBusMessage * const m) {
   Media media;
   if (parseMediaArguments(m, media)) {
-    assert(NULL != player_);
-    player_->play(media);
+    assert(NULL != controller_);
+    controller_->play(media);
   }
 }
-
-void DBUS::previous(DBusMessage * const m) { }
 
 void DBUS::pushBack(DBusMessage * const m) {
   Media media;
   if (parseMediaArguments(m, media)) {
-    assert(NULL != queue_);
-    assert(NULL != player_);
-    if (Player::kStopped == player_->state() && queue_->empty()) {
-      player_->play(media);
-    } else {
-      queue_->pushBack(media);
-    }
+    assert(NULL != controller_);
+    controller_->pushBack(media);
   }
 }
 
 void DBUS::pushFront(DBusMessage * const m) {
   Media media;
   if (parseMediaArguments(m, media)) {
-    assert(NULL != queue_);
-    assert(NULL != player_);
-    if (Player::kStopped == player_->state() && queue_->empty()) {
-      player_->play(media);
-    } else {
-      queue_->pushFront(media);
-    }
+    assert(NULL != controller_);
+    controller_->pushFront(media);
   }
+}
+
+//TODO(dmorilha): reduce repetition
+void DBUS::clear(DBusMessage * const m) {
+  assert(NULL != controller_);
+  controller_->clear();
+}
+
+void DBUS::next(DBusMessage * const m) {
+  assert(NULL != controller_);
+  controller_->next();
+}
+
+void DBUS::previous(DBusMessage * const m) {
+  assert(NULL != controller_);
+  controller_->previous();
 }
 
 void DBUS::stop(DBusMessage * const m) {
-  std::cout << "stop" << std::endl;
-  assert(NULL != player_);
-  player_->stop();
+  assert(NULL != controller_);
+  controller_->stop();
 }
 
 void DBUS::volumeDown(DBusMessage * const m) {
-  std::cout << "volume down" << std::endl;
-  assert(NULL != player_);
-  player_->volumeDown();
+  assert(NULL != controller_);
+  controller_->volumeDown();
 }
 
 void DBUS::volumeUp(DBusMessage * const m) {
-  std::cout << "volume up" << std::endl;
-  assert(NULL != player_);
-  player_->volumeUp();
+  assert(NULL != controller_);
+  controller_->volumeUp();
 }
 
 void DBUS::forward30(DBusMessage * const m) {
-  std::cout << "forward 30 seconds" << std::endl;
-  assert(NULL != player_);
-  player_->forward30();
+  assert(NULL != controller_);
+  controller_->forward30();
 }
 
 void DBUS::forward600(DBusMessage * const m) {
-  std::cout << "forward 600 seconds" << std::endl;
-  assert(NULL != player_);
-  player_->forward600();
+  assert(NULL != controller_);
+  controller_->forward600();
 }
 
 void DBUS::repeat(DBusMessage * const m) {
-  std::cout << "repeat" << std::endl;
-  assert(NULL != player_);
-  Media * const media = player_->media();
-  if (NULL != media) {
-    media->repeat();
-  }
+  assert(NULL != controller_);
+  controller_->repeat();
 }
 
 void DBUS::resume(DBusMessage * const m) {
-  std::cout << "resume" << std::endl;
-  assert(NULL != player_);
-  player_->resume();
+  assert(NULL != controller_);
+  controller_->resume();
 }
 
 void DBUS::rewind30(DBusMessage * const m) {
-  std::cout << "rewind 30 seconds" << std::endl;
-  assert(NULL != player_);
-  player_->rewind30();
+  assert(NULL != controller_);
+  controller_->rewind30();
 }
 
 void DBUS::rewind600(DBusMessage * const m) {
-  std::cout << "rewind 600 seconds" << std::endl;
-  assert(NULL != player_);
-  player_->rewind600();
+  assert(NULL != controller_);
+  controller_->rewind600();
 }
 
 void DBUS::pause(DBusMessage * const m) {
-  std::cout << "pause" << std::endl;
-  assert(NULL != player_);
-  player_->pause();
+  assert(NULL != controller_);
+  controller_->pause();
 }
 
 void DBUS::tvOn(DBusMessage * const m) {
-  if (NULL != tv_) {
-    std::cout << "turn on" << std::endl;
-    tv_->on();
-  }
+  assert(NULL != controller_);
+  controller_->tvOn();
 }
 
 void DBUS::tvOff(DBusMessage * const m) {
-  if (NULL != tv_) {
-    std::cout << "tv off" << std::endl;
-    tv_->standby();
-  }
+  assert(NULL != controller_);
+  controller_->tvOff();
 }
 
 void DBUS::lightsOn(DBusMessage * const s) {
-  if (NULL != lights_) {
-    std::cout << "lights on" << std::endl;
-    lights_->on();
-  }
+  assert(NULL != controller_);
+  controller_->lightsOn();
 }
 
 void DBUS::lightsOff(DBusMessage * const s) {
-  if (NULL != lights_) {
-    std::cout << "lights off" << std::endl;
-    lights_->off();
-  }
+  assert(NULL != controller_);
+  controller_->lightsOff();
 }
 
 } //end of oas namespace

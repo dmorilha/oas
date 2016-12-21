@@ -14,7 +14,7 @@ static void sendPayload(const char * const a, const int po,
 
   sockaddr_in address;
 
-  memset(&address, '0', sizeof(address));
+  memset(&address, 0, sizeof(address));
 
   address.sin_family = AF_INET;
   address.sin_port = htons(po);

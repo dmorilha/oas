@@ -4,11 +4,13 @@
 #include <stdio.h>
 #include <unistd.h>
 
+#include "controller.h"
 #include "dbus-handler.h"
 #include "hs200.h"
 #include "media.h"
 #include "player.h"
 #include "queue.h"
+#include "sphinx.h"
 #include "tv.h"
 
 static const int FIVE_MINUTES = 60 * 5 * 2;
@@ -20,7 +22,10 @@ oas::Queue queue;
 oas::TV tv;
 oas::HS200 lights("192.168.1.89");
 
-oas::DBUS dbus(&player, &queue, &tv, &lights);
+oas::Controller controller(&player, &queue, &tv, &lights);
+
+oas::DBUS dbus(&controller);
+oas::Sphinx sphinx(&controller);
 
 void loop(void) {
   using namespace oas;
@@ -73,7 +78,7 @@ void loop(void) {
       }
 
     } else if (Player::kPlaying != playerState) {
-      //good for listening...
+      sphinx.processVoice();
 
     } else {
       //There is a problem is tv.on returns false.
@@ -93,6 +98,8 @@ void loop(void) {
     }
 
     dbus.processMessages();
+
+    //TODO(dmorilha): replace this with network select and same timeout.
     usleep(500000);
   }
 }
