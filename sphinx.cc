@@ -6,6 +6,7 @@
 #include "sphinx.h"
 
 namespace oas {
+
 Sphinx::~Sphinx() {
   assert(NULL != decoder_);
   ps_free(decoder_);
@@ -26,6 +27,7 @@ Sphinx::Sphinx(Controller * const c) :
       NULL);
   const_cast< ps_decoder_t * & >(decoder_) = ps_init(config); 
   assert(NULL != decoder_);
+  ps_start_utt(decoder_);
 }
 
 void Sphinx::dispatch(const char * const s) {
@@ -72,14 +74,8 @@ void Sphinx::processVoice(void) {
   }
 }
 
-void Sphinx::startRecording(void) {
-  assert(NULL != input_);
-  input_->startRecording();
-}
-
-void Sphinx::stopRecording(void) {
-  assert(NULL != input_);
-  input_->stopRecording();
+AudioInput * Sphinx::input(void) {
+  return input_;
 }
 
 } //end of oas namespace

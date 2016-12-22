@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
+#include "audio-input.h"
 #include "controller.h"
 #include "dbus-handler.h"
 #include "hs200.h"
@@ -20,7 +21,7 @@ static const int ONE_MINUTE = 60 * 2;
 oas::Player player;
 oas::Queue queue;
 oas::TV tv;
-oas::HS200 lights("192.168.1.89");
+oas::HS200 lights("192.168.1.90");
 
 oas::Controller controller(&player, &queue, &tv, &lights);
 
@@ -34,16 +35,32 @@ void loop(void) {
 
   int secondsToStandBy = FIVE_MINUTES;
   int counter1 = 0;
+  int interval;
 
   while (true) {
     const Player::State playerState = player.state();
     const TV::State tvState = tv.state();
     Media::Type mediaType = Media::kUndefined;
 
-    if (Player::kPlaying == playerState) {
-      const Media * const media = player.media();
-      assert(NULL != media);
-      mediaType = media->type();
+    {
+      AudioInput * const input = sphinx.input();
+      assert(NULL != input);
+      const AudioInput::State inputState = input->state();
+      if (Player::kPlaying == playerState) {
+        const Media * const media = player.media();
+        assert(NULL != media);
+        mediaType = media->type();
+        if (AudioInput::kRecording == inputState) {
+          input->stopRecording();
+        }
+        interval = 500000;
+      } else {
+        if (AudioInput::kNoRecording == inputState) {
+          input->startRecording();
+        }
+        sphinx.processVoice();
+        interval = 100000;
+      }
     }
 
     const bool isAudio = Media::kAudio == mediaType;
@@ -77,8 +94,6 @@ void loop(void) {
         }
       }
 
-    } else if (Player::kPlaying != playerState) {
-      sphinx.processVoice();
 
     } else {
       //There is a problem is tv.on returns false.
@@ -100,7 +115,7 @@ void loop(void) {
     dbus.processMessages();
 
     //TODO(dmorilha): replace this with network select and same timeout.
-    usleep(500000);
+    usleep(interval);
   }
 }
 
