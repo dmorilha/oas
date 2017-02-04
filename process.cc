@@ -22,8 +22,23 @@ Process::~Process(void) {
 Process::Process(void) : pid_(0),
   in_(0), out_(0), error_(0) { }
 
+void print(const char * const a[]) {
+  int i = 0;
+  const char * s = a[i];
+
+  while (NULL != s) {
+    std::cout << s << " ";
+    s = a[++i];
+  }
+
+  std::cout << std::endl;
+}
+
+
 bool Process::execute(const char * const e, const char * const * a) {
   if (0 != pid_) { return false; }
+
+  print(a);
 
   int pipes[6];
 
