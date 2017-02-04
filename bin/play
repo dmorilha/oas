@@ -27,8 +27,8 @@ case `basename $0` in
   done
   ;;
 "push-front")
-  for i in `for j in $@; do; echo $j; done | tac`; do
-    func "oas.method.string.pushFront" $i;
+  for i in `for j in $@; do echo "$j"; done | tac`; do
+    func "oas.method.string.pushFront" "$i";
   done
   ;;
 "push-back")
