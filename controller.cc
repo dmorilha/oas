@@ -148,4 +148,16 @@ void Controller::lightsOff(void) {
   }
 }
 
+void Controller::bluetoothOn(void) {
+  assert(NULL != player_);
+  std::cout << "bluetooth on" << std::endl;
+  player_->setBluetooth(true);
+}
+
+void Controller::bluetoothOff(void) {
+  assert(NULL != player_);
+  std::cout << "bluetooth off" << std::endl;
+  player_->setBluetooth(false);
+}
+
 } //end of oas namespace

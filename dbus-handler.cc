@@ -236,4 +236,14 @@ void DBUS::lightsOff(DBusMessage * const s) {
   controller_->lightsOff();
 }
 
+void DBUS::bluetoothOn(DBusMessage * const s) {
+  assert(NULL != controller_);
+  controller_->bluetoothOn();
+}
+
+void DBUS::bluetoothOff(DBusMessage * const s) {
+  assert(NULL != controller_);
+  controller_->bluetoothOff();
+}
+
 } //end of oas namespace

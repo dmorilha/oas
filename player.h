@@ -23,8 +23,8 @@ struct Player {
   Process * process_;
   //dbus::Connection * dbus_;
   Media * media_;
-
   int volume_;
+  bool bluetooth_;
 
   ~Player(void);
   Player(void);
@@ -43,6 +43,10 @@ struct Player {
   void stop(void);
   void volumeDown(void);
   void volumeUp(void);
+
+  inline void setBluetooth(const bool v) {
+    bluetooth_ = v;
+  }
 };
 
 } //end of oas namespace

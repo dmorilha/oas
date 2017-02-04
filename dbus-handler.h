@@ -10,6 +10,8 @@ static const char * const DBUS_METHOD_STRING = "oas.method.string";
 static const char * const DBUS_METHOD_VOID = "oas.method.void";
 
 #define DBUS_METHOD_LIST(V) \
+  V(bluetoothOn, DBUS_METHOD_VOID) \
+  V(bluetoothOff, DBUS_METHOD_VOID) \
   V(clear, DBUS_METHOD_VOID) \
   V(forward30, DBUS_METHOD_VOID) \
   V(forward600, DBUS_METHOD_VOID) \

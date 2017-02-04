@@ -18,6 +18,8 @@ struct Controller {
   Controller(Player * const, Queue * const, TV * const t = NULL,
        Lights * const l = NULL);
 
+  void bluetoothOff(void);
+  void bluetoothOn(void);
   void clear(void);
   void forward30(void);
   void forward600(void);

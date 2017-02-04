@@ -30,7 +30,7 @@ void disposeProcess(Process * & p) {
   p = NULL;
 }
 
-void execute(Process * & p, const char * const v, const int vo = 0) {
+void execute(Process * & p, const char * const v, const int vo = 0, const bool b = false) {
   assert(NULL != v);
 
   if (NULL != p) {
@@ -41,16 +41,14 @@ void execute(Process * & p, const char * const v, const int vo = 0) {
 
   p = new Process();
 
-  static const char * const PLAYER = "/usr/bin/omxplayer";
   char volume[64] = { 0 };
-  sprintf(volume, "%d", vo * 300);
-  std::cout << "volume " << volume << std::endl;
 
+  static const char * const PLAYER = "/usr/bin/omxplayer";
   const char * const arguments[] = {
     PLAYER,
     "--blank",
     "--with-info",
-    "--adev", "both",
+    "--adev", (b ? "alsa" : "both"),
     "--refresh",
     "--audio_queue", "1",
     "--threshold", "10",
@@ -77,7 +75,7 @@ Player::~Player(void) {
 }
 
 Player::Player(void) : state_(kEnded), process_(NULL),
-  media_(NULL), volume_(0) { }
+  media_(NULL), volume_(0), bluetooth_(false) { }
 
 void Player::play(const Media & m) {
   const State s = state();
@@ -95,7 +93,7 @@ void Player::play(const Media & m) {
     media_ = new Media(m);
   }
 
-  execute(process_, media_->location(), volume_);
+  execute(process_, media_->location(), volume_, bluetooth_);
 
   if ( ! process_->exists()) {
     disposeProcess(process_);
