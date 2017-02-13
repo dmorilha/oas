@@ -6,6 +6,12 @@ case `basename $0` in
 "bluetooth-off")
   method="oas.method.void.bluetoothOff"
   ;;
+"chapter-next")
+  method="oas.method.void.chapterNext"
+  ;;
+"chapter-previous")
+  method="oas.method.void.chapterPrevious"
+  ;;
 "clear")
   method="oas.method.void.clear"
   ;;
@@ -18,7 +24,7 @@ case `basename $0` in
 "next")
   method="oas.method.void.next"
   ;;
-"resume")
+"resume"|"unpause")
   method="oas.method.void.resume"
   ;;
 "pause")
@@ -38,6 +44,9 @@ case `basename $0` in
   ;;
 "lights-on")
   method="oas.method.void.lightsOn"
+  ;;
+"show-info")
+  method="oas.method.void.showInfo"
   ;;
 "tv-off")
   method="oas.method.void.tvOff"

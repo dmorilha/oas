@@ -160,4 +160,21 @@ void Controller::bluetoothOff(void) {
   player_->setBluetooth(false);
 }
 
+void Controller::chapterNext(void) {
+  assert(NULL != player_);
+  std::cout << "chapter next" << std::endl;
+  player_->chapterNext();
+}
+
+void Controller::chapterPrevious(void) {
+  assert(NULL != player_);
+  std::cout << "chapter previous" << std::endl;
+  player_->chapterPrevious();
+}
+
+void Controller::showInfo(void) {
+  assert(NULL != player_);
+  std::cout << "show info" << std::endl;
+  player_->showInfo();
+}
 } //end of oas namespace

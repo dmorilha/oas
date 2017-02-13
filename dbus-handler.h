@@ -10,13 +10,15 @@ static const char * const DBUS_METHOD_STRING = "oas.method.string";
 static const char * const DBUS_METHOD_VOID = "oas.method.void";
 
 #define DBUS_METHOD_LIST(V) \
-  V(bluetoothOn, DBUS_METHOD_VOID) \
   V(bluetoothOff, DBUS_METHOD_VOID) \
+  V(bluetoothOn, DBUS_METHOD_VOID) \
+  V(chapterNext, DBUS_METHOD_VOID) \
+  V(chapterPrevious, DBUS_METHOD_VOID) \
   V(clear, DBUS_METHOD_VOID) \
   V(forward30, DBUS_METHOD_VOID) \
   V(forward600, DBUS_METHOD_VOID) \
-  V(lightsOn, DBUS_METHOD_VOID) \
   V(lightsOff, DBUS_METHOD_VOID) \
+  V(lightsOn, DBUS_METHOD_VOID) \
   V(next, DBUS_METHOD_VOID) \
   V(pause, DBUS_METHOD_VOID) \
   V(play, DBUS_METHOD_STRING) \
@@ -27,11 +29,12 @@ static const char * const DBUS_METHOD_VOID = "oas.method.void";
   V(resume, DBUS_METHOD_VOID) \
   V(rewind30, DBUS_METHOD_VOID) \
   V(rewind600, DBUS_METHOD_VOID) \
+  V(showInfo, DBUS_METHOD_VOID) \
   V(stop, DBUS_METHOD_VOID) \
+  V(tvOff, DBUS_METHOD_VOID) \
+  V(tvOn, DBUS_METHOD_VOID) \
   V(volumeDown, DBUS_METHOD_VOID) \
   V(volumeUp, DBUS_METHOD_VOID) \
-  V(tvOn, DBUS_METHOD_VOID) \
-  V(tvOff, DBUS_METHOD_VOID) \
 
 struct Controller;
 

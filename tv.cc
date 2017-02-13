@@ -18,7 +18,7 @@ struct Adapter {
   }
 
   bool ping(void) const {
-    return NULL != adapter_ && adapter_->PingAdapter();
+    return NULL != adapter_ && adapter_->IsActiveDeviceType(CEC::CEC_DEVICE_TYPE_TV);
   };
 
   void open(void) {
@@ -102,7 +102,7 @@ TriValue TV::on(void) {
   assert(NULL != adapter_);
   CEC::ICECAdapter * const adapter = adapter_->get();
   if (NULL == adapter) { return kUndefined; }
-  const bool result = adapter->PowerOnDevices(CEC::CECDEVICE_BROADCAST);
+  const bool result = adapter->PowerOnDevices();
   if (result) { state_ = kOn; }
   return result ? kTrue : kFalse;
 }
@@ -149,7 +149,7 @@ TriValue TV::pingAdapter(void) const {
   assert(NULL != adapter_);
   CEC::ICECAdapter * const adapter = adapter_->get();
   if (NULL == adapter) { return kUndefined; }
-  return adapter->PingAdapter() ? kTrue : kFalse;
+  return adapter->IsActiveDeviceType(CEC::CEC_DEVICE_TYPE_TV) ? kTrue : kFalse;
 }
 
 TriValue TV::poolDevice(void) const {

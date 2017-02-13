@@ -198,4 +198,19 @@ void Player::rewind600(void) const {
   process_->write("\x1b\x5b\x42"); //rewind 600 seconds
 }
 
+void Player::chapterNext(void) const {
+  if (NULL == process_) { return; }
+  process_->write("o"); //next chapter
+}
+
+void Player::chapterPrevious(void) const {
+  if (NULL == process_) { return; }
+  process_->write("i"); //previous chapter
+}
+
+void Player::showInfo(void) const {
+  if (NULL == process_) { return; }
+  process_->write("z"); //show info
+}
+
 } //end of oas namespace

@@ -32,6 +32,8 @@ struct Player {
   State state(void);
   Media * media(void) const;
 
+  void chapterNext(void) const;
+  void chapterPrevious(void) const;
   void end(void);
   void forward30(void) const;
   void forward600(void) const;
@@ -40,6 +42,7 @@ struct Player {
   void resume(void);
   void rewind30(void) const;
   void rewind600(void) const;
+  void showInfo(void) const;
   void stop(void);
   void volumeDown(void);
   void volumeUp(void);

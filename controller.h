@@ -20,6 +20,8 @@ struct Controller {
 
   void bluetoothOff(void);
   void bluetoothOn(void);
+  void chapterNext(void);
+  void chapterPrevious(void);
   void clear(void);
   void forward30(void);
   void forward600(void);
@@ -35,6 +37,7 @@ struct Controller {
   void resume(void);
   void rewind30(void);
   void rewind600(void);
+  void showInfo(void);
   void stop(void);
   void tvOff(void);
   void tvOn(void);

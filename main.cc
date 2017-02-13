@@ -21,7 +21,7 @@ static const int ONE_MINUTE = 60 * 2;
 oas::Player player;
 oas::Queue queue;
 oas::TV tv;
-oas::HS200 lights("192.168.1.90");
+oas::HS200 lights("192.168.1.64");
 
 oas::Controller controller(&player, &queue, &tv, &lights);
 
@@ -99,14 +99,18 @@ void loop(void) {
       //There is a problem is tv.on returns false.
       const Media * const media = player.media();
       assert(NULL != media);
-      if (TV::kOn != tvState && isAudio) {
+      if (TV::kOn != tvState && ! isAudio) {
         {
-          const bool result = tv.on();
-          std::cout << "on " << (result ? "true" : "false") << std::endl;
+          const TriValue result = tv.pingAdapter();
+          std::cout << "ping " << print(result) << std::endl;
         }
         {
-          const bool result = tv.setActiveSource();
-          std::cout << "set active source " << (result ? "true" : "false") << std::endl;
+          const TriValue result = tv.on();
+          std::cout << "on " << print(result) << std::endl;
+        }
+        {
+          const TriValue result = tv.setActiveSource();
+          std::cout << "set active source " << print(result) << std::endl;
         }
       }
       secondsToStandBy = FIVE_MINUTES;

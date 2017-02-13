@@ -13,12 +13,17 @@ struct Controller;
   V(hello, lightsOn) \
   V(lights off, lightsOff) \
   V(lights on, lightsOn) \
+  V(lights up, lightsOn) \
   V(next, next) \
   V(repeat, repeat) \
   V(resume, resume) \
   V(turn the lights on, lightsOn) \
   V(tv off, tvOff) \
+  V(t v off, tvOff) \
   V(tv on, tvOn) \
+  V(t v on, tvOn) \
+  V(tv up, tvOn) \
+  V(t v up, tvOn) \
 
 struct Sphinx {
   ps_decoder_t * const decoder_;
