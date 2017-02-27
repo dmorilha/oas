@@ -43,6 +43,7 @@ struct Controller {
   void tvOn(void);
   void volumeDown(void);
   void volumeUp(void);
+  void nextSubtitleStream(void);
 };
 } //end of oas namespace
 

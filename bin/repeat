@@ -24,6 +24,9 @@ case `basename $0` in
 "next")
   method="oas.method.void.next"
   ;;
+"next-subtitle-stream")
+  method="oas.method.void.nextSubtitleStream"
+  ;;
 "resume"|"unpause")
   method="oas.method.void.resume"
   ;;

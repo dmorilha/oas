@@ -177,4 +177,10 @@ void Controller::showInfo(void) {
   std::cout << "show info" << std::endl;
   player_->showInfo();
 }
+
+void Controller::nextSubtitleStream(void) {
+  assert(NULL != player_);
+  std::cout << "next subtitle stream" << std::endl;
+  player_->nextSubtitleStream();
+}
 } //end of oas namespace

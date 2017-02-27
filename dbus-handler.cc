@@ -261,4 +261,9 @@ void DBUS::showInfo(DBusMessage * const s) {
   controller_->showInfo();
 }
 
+void DBUS::nextSubtitleStream(DBusMessage * const s) {
+  assert(NULL != controller_);
+  controller_->nextSubtitleStream();
+}
+
 } //end of oas namespace

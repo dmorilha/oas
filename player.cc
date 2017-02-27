@@ -42,6 +42,7 @@ void execute(Process * & p, const char * const v, const int vo = 0, const bool b
   p = new Process();
 
   char volume[64] = { 0 };
+  sprintf(volume, "%d", vo * 300);
 
   static const char * const PLAYER = "/usr/bin/omxplayer";
   const char * const arguments[] = {
@@ -50,10 +51,6 @@ void execute(Process * & p, const char * const v, const int vo = 0, const bool b
     "--with-info",
     "--adev", (b ? "alsa" : "both"),
     "--refresh",
-    "--audio_queue", "1",
-    "--threshold", "10",
-    "--timeout", "60",
-    "--video_queue", "2",
     "--font", "/usr/share/fonts/TTF/DejaVuSans.ttf",
     "--italic-font", "/usr/share/fonts/TTF/DejaVuSans-Oblique.ttf",
     "--vol", volume,
@@ -211,6 +208,11 @@ void Player::chapterPrevious(void) const {
 void Player::showInfo(void) const {
   if (NULL == process_) { return; }
   process_->write("z"); //show info
+}
+
+void Player::nextSubtitleStream(void) const {
+  if (NULL == process_) { return; }
+  process_->write("m"); //next subtitle stream
 }
 
 } //end of oas namespace
