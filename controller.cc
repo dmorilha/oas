@@ -183,4 +183,16 @@ void Controller::nextSubtitleStream(void) {
   std::cout << "next subtitle stream" << std::endl;
   player_->nextSubtitleStream();
 }
+
+void Controller::speedIncrease(void) {
+  assert(NULL != player_);
+  std::cout << "speed increase" << std::endl;
+  player_->speedIncrease();
+}
+
+void Controller::speedDecrease(void) {
+  assert(NULL != player_);
+  std::cout << "speed decrease" << std::endl;
+  player_->speedDecrease();
+}
 } //end of oas namespace

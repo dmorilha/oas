@@ -266,4 +266,14 @@ void DBUS::nextSubtitleStream(DBusMessage * const s) {
   controller_->nextSubtitleStream();
 }
 
+void DBUS::speedIncrease(DBusMessage * const s) {
+  assert(NULL != controller_);
+  controller_->speedIncrease();
+}
+
+void DBUS::speedDecrease(DBusMessage * const s) {
+  assert(NULL != controller_);
+  controller_->speedDecrease();
+}
+
 } //end of oas namespace

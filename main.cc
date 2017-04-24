@@ -21,12 +21,12 @@ static const int ONE_MINUTE = 60 * 2;
 oas::Player player;
 oas::Queue queue;
 oas::TV tv;
-oas::HS200 lights("192.168.1.64");
+oas::HS200 lights("192.168.1.67");
 
 oas::Controller controller(&player, &queue, &tv, &lights);
 
 oas::DBUS dbus(&controller);
-oas::Sphinx sphinx(&controller);
+//oas::Sphinx sphinx(&controller);
 
 void loop(void) {
   using namespace oas;
@@ -35,21 +35,24 @@ void loop(void) {
 
   int secondsToStandBy = FIVE_MINUTES;
   int counter1 = 0;
-  int interval;
+  int interval = 500000;
 
   while (true) {
     const Player::State playerState = player.state();
     const TV::State tvState = tv.state();
-    Media::Type mediaType = Media::kUndefined;
+    const Media * const media = player.media();
+    Media::Type mediaType = Media::Type::kUndefined;
+    if (NULL != media) {
+      mediaType = media->type();
+    }
+    const bool isAudio = Media::kAudio == mediaType;
 
+      /*
     {
       AudioInput * const input = sphinx.input();
       assert(NULL != input);
       const AudioInput::State inputState = input->state();
       if (Player::kPlaying == playerState) {
-        const Media * const media = player.media();
-        assert(NULL != media);
-        mediaType = media->type();
         if (AudioInput::kRecording == inputState) {
           input->stopRecording();
         }
@@ -62,8 +65,8 @@ void loop(void) {
         interval = 100000;
       }
     }
+         */
 
-    const bool isAudio = Media::kAudio == mediaType;
 
     /*
     if (counter1++ % ONE_MINUTES == 0) {

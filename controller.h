@@ -44,6 +44,8 @@ struct Controller {
   void volumeDown(void);
   void volumeUp(void);
   void nextSubtitleStream(void);
+  void speedIncrease(void);
+  void speedDecrease(void);
 };
 } //end of oas namespace
 

@@ -215,4 +215,14 @@ void Player::nextSubtitleStream(void) const {
   process_->write("m"); //next subtitle stream
 }
 
+void Player::speedIncrease(void) const {
+  if (NULL == process_) { return; }
+  process_->write("2"); //increase speed
+}
+
+void Player::speedDecrease(void) const {
+  if (NULL == process_) { return; }
+  process_->write("1"); //decrease speed
+}
+
 } //end of oas namespace

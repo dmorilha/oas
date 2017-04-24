@@ -31,6 +31,8 @@ static const char * const DBUS_METHOD_VOID = "oas.method.void";
   V(rewind30, DBUS_METHOD_VOID) \
   V(rewind600, DBUS_METHOD_VOID) \
   V(showInfo, DBUS_METHOD_VOID) \
+  V(speedIncrease, DBUS_METHOD_VOID) \
+  V(speedDecrease, DBUS_METHOD_VOID) \
   V(stop, DBUS_METHOD_VOID) \
   V(tvOff, DBUS_METHOD_VOID) \
   V(tvOn, DBUS_METHOD_VOID) \

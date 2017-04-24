@@ -80,6 +80,8 @@ struct Player {
   void volumeDown(void);
   void volumeUp(void);
   void nextSubtitleStream(void) const;
+  void speedIncrease(void) const;
+  void speedDecrease(void) const;
 
   inline void setBluetooth(const bool v) {
     bluetooth_ = v;

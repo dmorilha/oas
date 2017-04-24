@@ -51,8 +51,14 @@ case `basename $0` in
 "show-info")
   method="oas.method.void.showInfo"
   ;;
+"speed-increase")
+  method="oas.method.void.speedIncrease"
+  ;;
+"speed-decrease")
+  method="oas.method.void.speedDecrease"
+  ;;
 "tv-off")
-  method="oas.method.void.tvOff"
+ method="oas.method.void.tvOff"
   ;;
 "tv-on")
   method="oas.method.void.tvOn"
