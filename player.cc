@@ -30,8 +30,20 @@ void disposeProcess(Process * & p) {
   p = NULL;
 }
 
-void execute(Process * & p, const char * const v, const int vo = 0, const bool b = false) {
+struct ExecutionDetails {
+  Media::Type mediaType;
+  bool bluetooth;
+  int volume;
+
+  ExecutionDetails(void) :
+    mediaType(Media::kUndefined),
+    bluetooth(false),
+    volume(0) { }
+};
+
+void execute(Process * & p, const char * const v, const ExecutionDetails * const d) {
   assert(NULL != v);
+  assert(NULL != d);
 
   if (NULL != p) {
     disposeProcess(p);
@@ -42,14 +54,15 @@ void execute(Process * & p, const char * const v, const int vo = 0, const bool b
   p = new Process();
 
   char volume[64] = { 0 };
-  sprintf(volume, "%d", vo * 300);
+  sprintf(volume, "%d", d->volume * 300);
 
   static const char * const PLAYER = "/usr/bin/omxplayer";
+
   const char * const arguments[] = {
     PLAYER,
-    "--blank",
+    (d->mediaType != Media::kAudio ? "--blank" : "--no-osd"),
     "--with-info",
-    "--adev", (b ? "alsa" : "both"),
+    "--adev", (d->bluetooth ? "alsa" : "both"),
     "--refresh",
     "--font", "/usr/share/fonts/TTF/DejaVuSans.ttf",
     "--italic-font", "/usr/share/fonts/TTF/DejaVuSans-Oblique.ttf",
@@ -90,7 +103,13 @@ void Player::play(const Media & m) {
     media_ = new Media(m);
   }
 
-  execute(process_, media_->location(), volume_, bluetooth_);
+  ExecutionDetails d;
+
+  d.bluetooth = bluetooth_;
+  d.mediaType = media_->type();
+  d.volume = volume_;
+
+  execute(process_, media_->location(), &d);
 
   if ( ! process_->exists()) {
     disposeProcess(process_);
