@@ -12,7 +12,7 @@ case `basename $0` in
 "chapter-previous")
   method="oas.method.void.chapterPrevious"
   ;;
-"clear")
+"clear"|"clear-playlist")
   method="oas.method.void.clear"
   ;;
 "forward30")

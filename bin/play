@@ -19,7 +19,7 @@ func () {
   else
     case $location in
       http*youtu*be*)
-        for url in `youtube-dl -g -f $YOUTUBE_QUALITY $location 2>/dev/null;`; do
+        for url in `youtube-dl -g --yes-playlist -i -q -f $YOUTUBE_QUALITY $location 2>/dev/null;`; do
           dbus-send --system --dest=oas.methods.server --type=method_call / $1 "string:$url" "string:video";
         done;
         ;;
