@@ -1,11 +1,13 @@
 #!/bin/bash
 
 IFS=$'\n';
+YOUTUBE_QUALITY=${YOUTUBE_QUALITY:-18};
 
 func () {
   location="$2"
-  path=`realpath "$location";`
+  path=`realpath "$location" 2>/dev/null;`
   if [[ -n "$path" ]]; then
+    type="";
     location="$path"
     file=`file -bi "$path" 2>/dev/null;`
     if [[ "$file" == "audio/"* ]]; then
@@ -13,9 +15,17 @@ func () {
     elif [[ "$file" == "video/"* ]]; then
       type='video';
     fi
+    dbus-send --system --dest=oas.methods.server --type=method_call / $1 "string:$location" "string:$type";
+  else
+    case $location in
+      http*youtu*be*)
+        for url in `youtube-dl -g -f $YOUTUBE_QUALITY $location 2>/dev/null;`; do
+          dbus-send --system --dest=oas.methods.server --type=method_call / $1 "string:$url" "string:video";
+        done;
+        ;;
+    esac
   fi;
-  echo dbus-send --system --dest=oas.methods.server --type=method_call / $1 "string:$location" "string:$type";
-  dbus-send --system --dest=oas.methods.server --type=method_call / $1 "string:$location" "string:$type";
+
 }
 
 case `basename $0` in
