@@ -69,9 +69,10 @@ void execute(Process * & p, const char * const v, const ExecutionDetails * const
   arguments.push_back("--with-info");
 
   if (AudioDevice::kUndefined != d->audioDevice) {
-    arguments.push_back("--adev");
-    arguments.push_back(AudioDevice::print(d->audioDevice));
+    d->audioDevice = AudioDevice::kBoth;
   }
+  arguments.push_back("--adev");
+  arguments.push_back(AudioDevice::print(d->audioDevice));
 
   arguments.push_back("--refresh");
 

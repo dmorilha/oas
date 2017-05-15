@@ -129,7 +129,6 @@ void loop(void) {
 int main(void) {
   signal(SIGCHLD, SIG_IGN);
   dbus.listen();
-  player.setAudioDevice(oas::AudioDevice::kBoth);
   loop();
   return 0;
 }
