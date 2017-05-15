@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <iostream>
+#include <vector>
 
 #include "player.h"
 
@@ -53,29 +54,55 @@ void execute(Process * & p, const char * const v, const ExecutionDetails * const
 
   p = new Process();
 
-  char volume[64] = { 0 };
-  sprintf(volume, "%d", d->volume * 300);
-
   static const char * const PLAYER = "/usr/bin/omxplayer";
 
-  const char * const arguments[] = {
-    PLAYER,
-    (d->mediaType != Media::kAudio ? "--blank" : "--no-osd"),
-    "--with-info",
-    "--adev", AudioDevice::print(d->audioDevice),
-    "--refresh",
-    "--font", "/usr/share/fonts/TTF/DejaVuSans.ttf",
-    "--italic-font", "/usr/share/fonts/TTF/DejaVuSans-Oblique.ttf",
-    "--vol", volume,
-    "--audio_queue", "5",
-    "--video_queue", "5",
-    "--threshold", "30",
-    "--timeout", "30",
-    v,
-    NULL
-  };
+  typedef std::vector< const char * > Arguments;
+  Arguments arguments;
+  arguments.push_back(PLAYER);
 
-  p->execute(PLAYER, arguments);
+  if (d->mediaType != Media::kAudio) {
+    arguments.push_back("--blank");
+  } else {
+    arguments.push_back("--no-osd");
+  }
+
+  arguments.push_back("--with-info");
+
+  if (AudioDevice::kUndefined != d->audioDevice) {
+    arguments.push_back("--adev");
+    arguments.push_back(AudioDevice::print(d->audioDevice));
+  }
+
+  arguments.push_back("--refresh");
+
+  arguments.push_back("--font");
+  arguments.push_back("/usr/share/fonts/TTF/DejaVuSans.ttf");
+
+  arguments.push_back("--italic-font");
+  arguments.push_back("/usr/share/fonts/TTF/DejaVuSans-Oblique.ttf");
+
+  arguments.push_back("--vol");
+  char volume[64] = { 0 };
+  sprintf(volume, "%d", d->volume * 300);
+  arguments.push_back(volume);
+
+  arguments.push_back("--audio_queue");
+  arguments.push_back("5");
+
+  arguments.push_back("--video_queue");
+  arguments.push_back("5");
+
+  arguments.push_back("--threshold");
+  arguments.push_back("30");
+
+  arguments.push_back("--timeout");
+  arguments.push_back("30");
+
+  arguments.push_back(v);
+
+  arguments.push_back(NULL);
+
+  p->execute(PLAYER, arguments.data());
 }
 
 Player::~Player(void) {
