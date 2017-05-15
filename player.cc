@@ -31,13 +31,13 @@ void disposeProcess(Process * & p) {
 }
 
 struct ExecutionDetails {
+  AudioDevice::Device audioDevice;
   Media::Type mediaType;
-  bool bluetooth;
   int volume;
 
   ExecutionDetails(void) :
+    audioDevice(AudioDevice::kUndefined),
     mediaType(Media::kUndefined),
-    bluetooth(false),
     volume(0) { }
 };
 
@@ -62,11 +62,15 @@ void execute(Process * & p, const char * const v, const ExecutionDetails * const
     PLAYER,
     (d->mediaType != Media::kAudio ? "--blank" : "--no-osd"),
     "--with-info",
-    "--adev", (d->bluetooth ? "alsa" : "both"),
+    "--adev", AudioDevice::print(d->audioDevice),
     "--refresh",
     "--font", "/usr/share/fonts/TTF/DejaVuSans.ttf",
     "--italic-font", "/usr/share/fonts/TTF/DejaVuSans-Oblique.ttf",
     "--vol", volume,
+    "--audio_queue", "5",
+    "--video_queue", "5",
+    "--threshold", "30",
+    "--timeout", "30",
     v,
     NULL
   };
@@ -85,7 +89,7 @@ Player::~Player(void) {
 }
 
 Player::Player(void) : state_(kEnded), process_(NULL),
-  media_(NULL), volume_(0), bluetooth_(false) { }
+  media_(NULL), volume_(0), audioDevice_(AudioDevice::kUndefined) { }
 
 void Player::play(const Media & m) {
   const State s = state();
@@ -105,7 +109,7 @@ void Player::play(const Media & m) {
 
   ExecutionDetails d;
 
-  d.bluetooth = bluetooth_;
+  d.audioDevice = audioDevice_;
   d.mediaType = media_->type();
   d.volume = volume_;
 

@@ -150,6 +150,21 @@ void DBUS::pushFront(DBusMessage * const m) {
   }
 }
 
+void DBUS::setAudioDevice(DBusMessage * const m) {
+  DBusMessageIter arguments;
+
+  if ( ! dbus_message_iter_init(m, &arguments)) {
+    std::cerr << "Method was called with no parameters" << std::endl;
+
+  } else if (DBUS_TYPE_STRING == dbus_message_iter_get_arg_type(&arguments)) {
+    const char * audioDevice = NULL;
+    dbus_message_iter_get_basic(&arguments, &audioDevice);
+    controller_->setAudioDevice(AudioDevice::fromString(audioDevice));
+  } else {
+    std::cerr << "First argument is not string" << std::endl;
+  }
+}
+
 //TODO(dmorilha): reduce repetition
 void DBUS::clear(DBusMessage * const m) {
   assert(NULL != controller_);
@@ -234,16 +249,6 @@ void DBUS::lightsOn(DBusMessage * const s) {
 void DBUS::lightsOff(DBusMessage * const s) {
   assert(NULL != controller_);
   controller_->lightsOff();
-}
-
-void DBUS::bluetoothOn(DBusMessage * const s) {
-  assert(NULL != controller_);
-  controller_->bluetoothOn();
-}
-
-void DBUS::bluetoothOff(DBusMessage * const s) {
-  assert(NULL != controller_);
-  controller_->bluetoothOff();
 }
 
 void DBUS::chapterNext(DBusMessage * const s) {

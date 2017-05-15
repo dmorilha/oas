@@ -10,8 +10,6 @@ static const char * const DBUS_METHOD_STRING = "oas.method.string";
 static const char * const DBUS_METHOD_VOID = "oas.method.void";
 
 #define DBUS_METHOD_LIST(V) \
-  V(bluetoothOff, DBUS_METHOD_VOID) \
-  V(bluetoothOn, DBUS_METHOD_VOID) \
   V(chapterNext, DBUS_METHOD_VOID) \
   V(chapterPrevious, DBUS_METHOD_VOID) \
   V(clear, DBUS_METHOD_VOID) \
@@ -22,14 +20,15 @@ static const char * const DBUS_METHOD_VOID = "oas.method.void";
   V(next, DBUS_METHOD_VOID) \
   V(nextSubtitleStream, DBUS_METHOD_VOID) \
   V(pause, DBUS_METHOD_VOID) \
-  V(play, DBUS_METHOD_STRING) \
+  V(play, DBUS_METHOD_VOID) \
   V(previous, DBUS_METHOD_VOID) \
-  V(pushBack, DBUS_METHOD_STRING) \
-  V(pushFront, DBUS_METHOD_STRING) \
+  V(pushBack, DBUS_METHOD_VOID) \
+  V(pushFront, DBUS_METHOD_VOID) \
   V(repeat, DBUS_METHOD_VOID) \
   V(resume, DBUS_METHOD_VOID) \
   V(rewind30, DBUS_METHOD_VOID) \
   V(rewind600, DBUS_METHOD_VOID) \
+  V(setAudioDevice, DBUS_METHOD_VOID) \
   V(showInfo, DBUS_METHOD_VOID) \
   V(speedIncrease, DBUS_METHOD_VOID) \
   V(speedDecrease, DBUS_METHOD_VOID) \

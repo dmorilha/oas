@@ -1,6 +1,7 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
+#include "audio-device.h"
 #include "media.h"
 
 namespace oas {
@@ -18,8 +19,6 @@ struct Controller {
   Controller(Player * const, Queue * const, TV * const t = NULL,
        Lights * const l = NULL);
 
-  void bluetoothOff(void);
-  void bluetoothOn(void);
   void chapterNext(void);
   void chapterPrevious(void);
   void clear(void);
@@ -37,6 +36,7 @@ struct Controller {
   void resume(void);
   void rewind30(void);
   void rewind600(void);
+  void setAudioDevice(const AudioDevice::Device);
   void showInfo(void);
   void stop(void);
   void tvOff(void);

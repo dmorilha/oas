@@ -1,13 +1,13 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include "audio-device.h"
 #include "media.h"
 #include "process.h"
 
 namespace oas {
 
 /*
-
 ## KEY BINDINGS
 
 Key bindings to control omxplayer while playing:
@@ -36,7 +36,6 @@ Key bindings to control omxplayer while playing:
     right arrow seek +30 seconds
     down arrow  seek -600 seconds
     up arrow    seek +600 seconds
-
  */
 
 struct Player {
@@ -49,15 +48,15 @@ struct Player {
     kStopped,
   };
 
+
   static const char * print(const State);
 
   State state_;
 
   Process * process_;
-  //dbus::Connection * dbus_;
   Media * media_;
   int volume_;
-  bool bluetooth_;
+  AudioDevice::Device audioDevice_;
 
   ~Player(void);
   Player(void);
@@ -82,10 +81,7 @@ struct Player {
   void nextSubtitleStream(void) const;
   void speedIncrease(void) const;
   void speedDecrease(void) const;
-
-  inline void setBluetooth(const bool v) {
-    bluetooth_ = v;
-  }
+  inline void setAudioDevice(const AudioDevice::Device a) { audioDevice_ = a; }
 };
 
 } //end of oas namespace

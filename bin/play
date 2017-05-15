@@ -30,20 +30,20 @@ func () {
 
 case `basename $0` in
 "play")
-  func "oas.method.string.play" $1;
+  func "oas.method.void.play" $1;
   shift 1;
   for i in `for j in $@; do echo $j; done | tac`; do
-    func "oas.method.string.pushFront" $i;
+    func "oas.method.void.pushFront" $i;
   done
   ;;
 "push-front")
   for i in `for j in $@; do echo "$j"; done | tac`; do
-    func "oas.method.string.pushFront" "$i";
+    func "oas.method.void.pushFront" "$i";
   done
   ;;
 "push-back")
   for i in $@; do
-    func "oas.method.string.pushBack" $i;
+    func "oas.method.void.pushBack" $i;
   done;
   ;;
 esac
