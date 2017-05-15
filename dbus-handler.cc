@@ -159,6 +159,7 @@ void DBUS::setAudioDevice(DBusMessage * const m) {
   } else if (DBUS_TYPE_STRING == dbus_message_iter_get_arg_type(&arguments)) {
     const char * audioDevice = NULL;
     dbus_message_iter_get_basic(&arguments, &audioDevice);
+    assert(NULL != controller_);
     controller_->setAudioDevice(AudioDevice::fromString(audioDevice));
   } else {
     std::cerr << "First argument is not string" << std::endl;
@@ -196,14 +197,25 @@ void DBUS::volumeUp(DBusMessage * const m) {
   controller_->volumeUp();
 }
 
-void DBUS::forward30(DBusMessage * const m) {
-  assert(NULL != controller_);
-  controller_->forward30();
-}
+void DBUS::forward(DBusMessage * const m) {
+  DBusMessageIter arguments;
 
-void DBUS::forward600(DBusMessage * const m) {
   assert(NULL != controller_);
-  controller_->forward600();
+  if ( ! dbus_message_iter_init(m, &arguments)) {
+    controller_->forward(60);
+
+  } else if (DBUS_TYPE_STRING == dbus_message_iter_get_arg_type(&arguments)) {
+    const char * buffer = NULL;
+    dbus_message_iter_get_basic(&arguments, &buffer);
+    if (NULL != buffer) {
+      const int seconds = atoi(buffer);
+      if (0 < seconds) {
+        controller_->forward(seconds);
+      }
+    }
+  } else {
+    std::cerr << "First argument is not string" << std::endl;
+  }
 }
 
 void DBUS::repeat(DBusMessage * const m) {
@@ -216,14 +228,25 @@ void DBUS::resume(DBusMessage * const m) {
   controller_->resume();
 }
 
-void DBUS::rewind30(DBusMessage * const m) {
-  assert(NULL != controller_);
-  controller_->rewind30();
-}
+void DBUS::rewind(DBusMessage * const m) {
+  DBusMessageIter arguments;
 
-void DBUS::rewind600(DBusMessage * const m) {
   assert(NULL != controller_);
-  controller_->rewind600();
+  if ( ! dbus_message_iter_init(m, &arguments)) {
+    controller_->rewind(60);
+
+  } else if (DBUS_TYPE_STRING == dbus_message_iter_get_arg_type(&arguments)) {
+    const char * buffer = NULL;
+    dbus_message_iter_get_basic(&arguments, &buffer);
+    if (NULL != buffer) {
+      const int seconds = atoi(buffer);
+      if (0 < seconds) {
+        controller_->rewind(seconds);
+      }
+    }
+  } else {
+    std::cerr << "First argument is not string" << std::endl;
+  }
 }
 
 void DBUS::pause(DBusMessage * const m) {

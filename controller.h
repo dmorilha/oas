@@ -22,8 +22,7 @@ struct Controller {
   void chapterNext(void);
   void chapterPrevious(void);
   void clear(void);
-  void forward30(void);
-  void forward600(void);
+  void forward(const int);
   void lightsOff(void);
   void lightsOn(void);
   void next(void);
@@ -34,8 +33,7 @@ struct Controller {
   void pushFront(const Media &);
   void repeat(void);
   void resume(void);
-  void rewind30(void);
-  void rewind600(void);
+  void rewind(const int);
   void setAudioDevice(const AudioDevice::Device);
   void showInfo(void);
   void stop(void);

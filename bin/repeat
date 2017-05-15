@@ -9,11 +9,8 @@ case `basename $0` in
 "clear"|"clear-playlist")
   method="oas.method.void.clear"
   ;;
-"forward30")
-  method="oas.method.void.forward30"
-  ;;
-"forward600")
-  method="oas.method.void.forward600"
+"forward")
+  method="oas.method.void.forward"
   ;;
 "next")
   method="oas.method.void.next"
@@ -30,11 +27,8 @@ case `basename $0` in
 "repeat")
   method="oas.method.void.repeat"
   ;;
-"rewind30")
-  method="oas.method.void.rewind30"
-  ;;
-"rewind600")
-  method="oas.method.void.rewind600"
+"rewind")
+  method="oas.method.void.rewind"
   ;;
 "lights-off")
   method="oas.method.void.lightsOff"

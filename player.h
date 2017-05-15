@@ -67,13 +67,11 @@ struct Player {
   void chapterNext(void) const;
   void chapterPrevious(void) const;
   void end(void);
-  void forward30(void) const;
-  void forward600(void) const;
+  void forward(const int) const;
   void pause(void);
   void play(const Media &);
   void resume(void);
-  void rewind30(void) const;
-  void rewind600(void) const;
+  void rewind(const int) const;
   void showInfo(void) const;
   void stop(void);
   void volumeDown(void);

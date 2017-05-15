@@ -102,6 +102,7 @@ void execute(Process * & p, const char * const v, const ExecutionDetails * const
 
   arguments.push_back(NULL);
 
+  assert(!arguments.empty());
   p->execute(PLAYER, arguments.data());
 }
 
@@ -225,24 +226,26 @@ void Player::volumeDown(void) {
   process_->write("-"); //volume down
 }
 
-void Player::forward30(void) const {
+void Player::forward(const int s) const {
   if (NULL == process_) { return; }
-  process_->write("\x1b\x5b\x43"); //forward 30 seconds
+  for (int i = s / 600; i > 0; --i) {
+    process_->write("\x1b\x5b\x41"); //forward 600 seconds
+  }
+
+  for (int i = (s % 600) / 30 ; i > 0; --i) {
+    process_->write("\x1b\x5b\x43"); //forward 30 seconds
+  }
 }
 
-void Player::forward600(void) const {
+void Player::rewind(const int s) const {
   if (NULL == process_) { return; }
-  process_->write("\x1b\x5b\x41"); //forward 600 seconds
-}
+  for (int i = s / 600; i > 0; --i) {
+    process_->write("\x1b\x5b\x42"); //rewind 600 seconds
+  }
 
-void Player::rewind30(void) const {
-  if (NULL == process_) { return; }
-  process_->write("\x1b\x5b\x44"); //rewind 30 seconds
-}
-
-void Player::rewind600(void) const {
-  if (NULL == process_) { return; }
-  process_->write("\x1b\x5b\x42"); //rewind 600 seconds
+  for (int i = (s % 600) / 30 ; i > 0; --i) {
+    process_->write("\x1b\x5b\x44"); //rewind 30 seconds
+  }
 }
 
 void Player::chapterNext(void) const {

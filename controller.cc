@@ -75,16 +75,10 @@ void Controller::volumeUp(void) {
   player_->volumeUp();
 }
 
-void Controller::forward30(void) {
-  std::cout << "forward 30 seconds" << std::endl;
+void Controller::forward(const int s) {
+  std::cout << "forward " << s << " seconds" << std::endl;
   assert(NULL != player_);
-  player_->forward30();
-}
-
-void Controller::forward600(void) {
-  std::cout << "forward 600 seconds" << std::endl;
-  assert(NULL != player_);
-  player_->forward600();
+  player_->forward(s);
 }
 
 void Controller::repeat(void) {
@@ -102,16 +96,10 @@ void Controller::resume(void) {
   player_->resume();
 }
 
-void Controller::rewind30(void) {
-  std::cout << "rewind 30 seconds" << std::endl;
+void Controller::rewind(const int s) {
+  std::cout << "rewind " << s << " seconds" << std::endl;
   assert(NULL != player_);
-  player_->rewind30();
-}
-
-void Controller::rewind600(void) {
-  std::cout << "rewind 600 seconds" << std::endl;
-  assert(NULL != player_);
-  player_->rewind600();
+  player_->rewind(s);
 }
 
 void Controller::pause(void) {

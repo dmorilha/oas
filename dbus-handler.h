@@ -5,16 +5,13 @@
 #include <dbus/dbus.h>
 
 namespace oas {
-static const char * const DBUS_METHOD_INTEGER = "oas.method.integer";
-static const char * const DBUS_METHOD_STRING = "oas.method.string";
 static const char * const DBUS_METHOD_VOID = "oas.method.void";
 
 #define DBUS_METHOD_LIST(V) \
   V(chapterNext, DBUS_METHOD_VOID) \
   V(chapterPrevious, DBUS_METHOD_VOID) \
   V(clear, DBUS_METHOD_VOID) \
-  V(forward30, DBUS_METHOD_VOID) \
-  V(forward600, DBUS_METHOD_VOID) \
+  V(forward, DBUS_METHOD_VOID) \
   V(lightsOff, DBUS_METHOD_VOID) \
   V(lightsOn, DBUS_METHOD_VOID) \
   V(next, DBUS_METHOD_VOID) \
@@ -26,8 +23,7 @@ static const char * const DBUS_METHOD_VOID = "oas.method.void";
   V(pushFront, DBUS_METHOD_VOID) \
   V(repeat, DBUS_METHOD_VOID) \
   V(resume, DBUS_METHOD_VOID) \
-  V(rewind30, DBUS_METHOD_VOID) \
-  V(rewind600, DBUS_METHOD_VOID) \
+  V(rewind, DBUS_METHOD_VOID) \
   V(setAudioDevice, DBUS_METHOD_VOID) \
   V(showInfo, DBUS_METHOD_VOID) \
   V(speedIncrease, DBUS_METHOD_VOID) \
