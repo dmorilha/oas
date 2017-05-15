@@ -230,10 +230,12 @@ void Player::forward(const int s) const {
   if (NULL == process_) { return; }
   for (int i = s / 600; i > 0; --i) {
     process_->write("\x1b\x5b\x41"); //forward 600 seconds
+    usleep(50000);
   }
 
   for (int i = (s % 600) / 30 ; i > 0; --i) {
     process_->write("\x1b\x5b\x43"); //forward 30 seconds
+    usleep(50000);
   }
 }
 
@@ -241,10 +243,12 @@ void Player::rewind(const int s) const {
   if (NULL == process_) { return; }
   for (int i = s / 600; i > 0; --i) {
     process_->write("\x1b\x5b\x42"); //rewind 600 seconds
+    usleep(50000);
   }
 
   for (int i = (s % 600) / 30 ; i > 0; --i) {
     process_->write("\x1b\x5b\x44"); //rewind 30 seconds
+    usleep(50000);
   }
 }
 
