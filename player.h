@@ -79,6 +79,7 @@ struct Player {
   void nextSubtitleStream(void) const;
   void speedIncrease(void) const;
   void speedDecrease(void) const;
+  void repeat(void);
   inline void setAudioDevice(const AudioDevice::Device a) { audioDevice_ = a; }
 };
 

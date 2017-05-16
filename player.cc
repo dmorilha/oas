@@ -26,7 +26,6 @@ const char * Player::print(const State s) {
 
 void disposeProcess(Process * & p) {
   assert(NULL != p);
-  //p->kill();
   delete p;
   p = NULL;
 }
@@ -68,11 +67,9 @@ void execute(Process * & p, const char * const v, const ExecutionDetails * const
 
   arguments.push_back("--with-info");
 
-  if (AudioDevice::kUndefined != d->audioDevice) {
-    d->audioDevice = AudioDevice::kBoth;
-  }
   arguments.push_back("--adev");
-  arguments.push_back(AudioDevice::print(d->audioDevice));
+  arguments.push_back(AudioDevice::print(AudioDevice::kUndefined != d->audioDevice
+      ? d->audioDevice : AudioDevice::kBoth));
 
   arguments.push_back("--refresh");
 
@@ -97,7 +94,7 @@ void execute(Process * & p, const char * const v, const ExecutionDetails * const
   arguments.push_back("30");
 
   arguments.push_back("--timeout");
-  arguments.push_back("30");
+  arguments.push_back("60");
 
   arguments.push_back(v);
 
@@ -231,12 +228,12 @@ void Player::forward(const int s) const {
   if (NULL == process_) { return; }
   for (int i = s / 600; i > 0; --i) {
     process_->write("\x1b\x5b\x41"); //forward 600 seconds
-    usleep(50000);
+    usleep(150000);
   }
 
   for (int i = (s % 600) / 30 ; i > 0; --i) {
     process_->write("\x1b\x5b\x43"); //forward 30 seconds
-    usleep(50000);
+    usleep(150000);
   }
 }
 
@@ -244,12 +241,12 @@ void Player::rewind(const int s) const {
   if (NULL == process_) { return; }
   for (int i = s / 600; i > 0; --i) {
     process_->write("\x1b\x5b\x42"); //rewind 600 seconds
-    usleep(50000);
+    usleep(150000);
   }
 
   for (int i = (s % 600) / 30 ; i > 0; --i) {
     process_->write("\x1b\x5b\x44"); //rewind 30 seconds
-    usleep(50000);
+    usleep(150000);
   }
 }
 
@@ -281,6 +278,16 @@ void Player::speedIncrease(void) const {
 void Player::speedDecrease(void) const {
   if (NULL == process_) { return; }
   process_->write("1"); //decrease speed
+}
+
+void Player::repeat(void) {
+  if (NULL != media_) {
+    if (NULL == process_) {
+      play(*media_);
+    } else {
+      media_->repeat();
+    }
+  }
 }
 
 } //end of oas namespace

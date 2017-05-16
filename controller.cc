@@ -84,10 +84,7 @@ void Controller::forward(const int s) {
 void Controller::repeat(void) {
   std::cout << "repeat" << std::endl;
   assert(NULL != player_);
-  Media * const media = player_->media();
-  if (NULL != media) {
-    media->repeat();
-  }
+  player_->repeat();
 }
 
 void Controller::resume(void) {

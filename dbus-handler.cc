@@ -197,24 +197,44 @@ void DBUS::volumeUp(DBusMessage * const m) {
   controller_->volumeUp();
 }
 
-void DBUS::forward(DBusMessage * const m) {
+int parseTime(DBusMessage * const m) {
   DBusMessageIter arguments;
 
-  assert(NULL != controller_);
   if ( ! dbus_message_iter_init(m, &arguments)) {
-    controller_->forward(60);
+    return 60;
 
   } else if (DBUS_TYPE_STRING == dbus_message_iter_get_arg_type(&arguments)) {
     const char * buffer = NULL;
     dbus_message_iter_get_basic(&arguments, &buffer);
     if (NULL != buffer) {
-      const int seconds = atoi(buffer);
-      if (0 < seconds) {
-        controller_->forward(seconds);
+      int seconds = atoi(buffer);
+      if (seconds > 0) {
+        int length = 0;
+        for (int i = seconds; 0 < i; i /= 10) {
+          ++length;
+        }
+        const char suffix = buffer[length];
+        if ('h' == suffix) {
+          seconds *= 3600;
+        } else if ('s' == suffix && 30 > seconds) {
+          seconds = 0;
+        } else {
+          seconds *= 60;
+        }
+        return seconds;
       }
     }
   } else {
     std::cerr << "First argument is not string" << std::endl;
+  }
+  return 0;
+}
+
+void DBUS::forward(DBusMessage * const m) {
+  const int seconds = parseTime(m);
+  if (seconds > 0) {
+    assert(NULL != controller_);
+    controller_->forward(seconds);
   }
 }
 
@@ -229,23 +249,10 @@ void DBUS::resume(DBusMessage * const m) {
 }
 
 void DBUS::rewind(DBusMessage * const m) {
-  DBusMessageIter arguments;
-
-  assert(NULL != controller_);
-  if ( ! dbus_message_iter_init(m, &arguments)) {
-    controller_->rewind(60);
-
-  } else if (DBUS_TYPE_STRING == dbus_message_iter_get_arg_type(&arguments)) {
-    const char * buffer = NULL;
-    dbus_message_iter_get_basic(&arguments, &buffer);
-    if (NULL != buffer) {
-      const int seconds = atoi(buffer);
-      if (0 < seconds) {
-        controller_->rewind(seconds);
-      }
-    }
-  } else {
-    std::cerr << "First argument is not string" << std::endl;
+  const int seconds = parseTime(m);
+  if (seconds > 0) {
+    assert(NULL != controller_);
+    controller_->rewind(seconds);
   }
 }
 
