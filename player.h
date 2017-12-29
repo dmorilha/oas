@@ -7,37 +7,6 @@
 
 namespace oas {
 
-/*
-## KEY BINDINGS
-
-Key bindings to control omxplayer while playing:
-
-    1           decrease speed
-    2           increase speed
-    <           rewind
-    >           fast forward
-    z           show info
-    j           previous audio stream
-    k           next audio stream
-    i           previous chapter
-    o           next chapter
-    n           previous subtitle stream
-    m           next subtitle stream
-    s           toggle subtitles
-    w           show subtitles
-    x           hide subtitles
-    d           decrease subtitle delay (- 250 ms)
-    f           increase subtitle delay (+ 250 ms)
-    q           exit omxplayer
-    p / space   pause/resume
-    -           decrease volume
-    + / =       increase volume
-    left arrow  seek -30 seconds
-    right arrow seek +30 seconds
-    down arrow  seek -600 seconds
-    up arrow    seek +600 seconds
- */
-
 struct Player {
   enum State {
     kUnknown,
@@ -64,20 +33,14 @@ struct Player {
   State state(void);
   Media * media(void) const;
 
-  void chapterNext(void) const;
-  void chapterPrevious(void) const;
   void end(void);
   void forward(const int) const;
-  void nextSubtitleStream(void) const;
   void pause(void);
   void play(const Media &);
   void pressKey(const char *) const;
   void repeat(void);
   void resume(void);
   void rewind(const int) const;
-  void showInfo(void) const;
-  void speedDecrease(void) const;
-  void speedIncrease(void) const;
   void stop(void);
   void volumeDown(void);
   void volumeUp(void);

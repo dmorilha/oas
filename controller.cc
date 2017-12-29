@@ -139,42 +139,6 @@ void Controller::setAudioDevice(const AudioDevice::Device a) {
   player_->setAudioDevice(a);
 }
 
-void Controller::chapterNext(void) {
-  assert(NULL != player_);
-  std::cout << "chapter next" << std::endl;
-  player_->chapterNext();
-}
-
-void Controller::chapterPrevious(void) {
-  assert(NULL != player_);
-  std::cout << "chapter previous" << std::endl;
-  player_->chapterPrevious();
-}
-
-void Controller::showInfo(void) {
-  assert(NULL != player_);
-  std::cout << "show info" << std::endl;
-  player_->showInfo();
-}
-
-void Controller::nextSubtitleStream(void) {
-  assert(NULL != player_);
-  std::cout << "next subtitle stream" << std::endl;
-  player_->nextSubtitleStream();
-}
-
-void Controller::speedIncrease(void) {
-  assert(NULL != player_);
-  std::cout << "speed increase" << std::endl;
-  player_->speedIncrease();
-}
-
-void Controller::speedDecrease(void) {
-  assert(NULL != player_);
-  std::cout << "speed decrease" << std::endl;
-  player_->speedDecrease();
-}
-
 void Controller::pressKey(const char * const s) {
   assert(NULL != player_);
   std::cout << "press key(s) \"" << s << "\"" <<  std::endl;

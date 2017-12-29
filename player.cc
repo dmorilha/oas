@@ -250,36 +250,6 @@ void Player::rewind(const int s) const {
   }
 }
 
-void Player::chapterNext(void) const {
-  if (NULL == process_) { return; }
-  process_->write("o"); //next chapter
-}
-
-void Player::chapterPrevious(void) const {
-  if (NULL == process_) { return; }
-  process_->write("i"); //previous chapter
-}
-
-void Player::showInfo(void) const {
-  if (NULL == process_) { return; }
-  process_->write("z"); //show info
-}
-
-void Player::nextSubtitleStream(void) const {
-  if (NULL == process_) { return; }
-  process_->write("m"); //next subtitle stream
-}
-
-void Player::speedIncrease(void) const {
-  if (NULL == process_) { return; }
-  process_->write("2"); //increase speed
-}
-
-void Player::speedDecrease(void) const {
-  if (NULL == process_) { return; }
-  process_->write("1"); //decrease speed
-}
-
 void Player::pressKey(const char * k) const {
   if (NULL == process_) { return; }
   for (; '\0' != *k; ++k) {

@@ -281,36 +281,6 @@ void DBUS::lightsOff(DBusMessage * const s) {
   controller_->lightsOff();
 }
 
-void DBUS::chapterNext(DBusMessage * const s) {
-  assert(NULL != controller_);
-  controller_->chapterNext();
-}
-
-void DBUS::chapterPrevious(DBusMessage * const s) {
-  assert(NULL != controller_);
-  controller_->chapterPrevious();
-}
-
-void DBUS::showInfo(DBusMessage * const s) {
-  assert(NULL != controller_);
-  controller_->showInfo();
-}
-
-void DBUS::nextSubtitleStream(DBusMessage * const s) {
-  assert(NULL != controller_);
-  controller_->nextSubtitleStream();
-}
-
-void DBUS::speedIncrease(DBusMessage * const s) {
-  assert(NULL != controller_);
-  controller_->speedIncrease();
-}
-
-void DBUS::speedDecrease(DBusMessage * const s) {
-  assert(NULL != controller_);
-  controller_->speedDecrease();
-}
-
 void DBUS::pressKey(DBusMessage * const m) {
   DBusMessageIter arguments;
 

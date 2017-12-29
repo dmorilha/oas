@@ -19,8 +19,6 @@ struct Controller {
   Controller(Player * const, Queue * const, TV * const t = NULL,
        Lights * const l = NULL);
 
-  void chapterNext(void);
-  void chapterPrevious(void);
   void clear(void);
   void forward(const int);
   void lightsOff(void);
@@ -35,15 +33,11 @@ struct Controller {
   void resume(void);
   void rewind(const int);
   void setAudioDevice(const AudioDevice::Device);
-  void showInfo(void);
   void stop(void);
   void tvOff(void);
   void tvOn(void);
   void volumeDown(void);
   void volumeUp(void);
-  void nextSubtitleStream(void);
-  void speedIncrease(void);
-  void speedDecrease(void);
   void pressKey(const char * const);
 };
 } //end of oas namespace

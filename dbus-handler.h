@@ -8,14 +8,11 @@ namespace oas {
 static const char * const DBUS_METHOD_VOID = "oas.method.void";
 
 #define DBUS_METHOD_LIST(V) \
-  V(chapterNext, DBUS_METHOD_VOID) \
-  V(chapterPrevious, DBUS_METHOD_VOID) \
   V(clear, DBUS_METHOD_VOID) \
   V(forward, DBUS_METHOD_VOID) \
   V(lightsOff, DBUS_METHOD_VOID) \
   V(lightsOn, DBUS_METHOD_VOID) \
   V(next, DBUS_METHOD_VOID) \
-  V(nextSubtitleStream, DBUS_METHOD_VOID) \
   V(pause, DBUS_METHOD_VOID) \
   V(play, DBUS_METHOD_VOID) \
   V(pressKey, DBUS_METHOD_VOID) \
@@ -26,9 +23,6 @@ static const char * const DBUS_METHOD_VOID = "oas.method.void";
   V(resume, DBUS_METHOD_VOID) \
   V(rewind, DBUS_METHOD_VOID) \
   V(setAudioDevice, DBUS_METHOD_VOID) \
-  V(showInfo, DBUS_METHOD_VOID) \
-  V(speedIncrease, DBUS_METHOD_VOID) \
-  V(speedDecrease, DBUS_METHOD_VOID) \
   V(stop, DBUS_METHOD_VOID) \
   V(tvOff, DBUS_METHOD_VOID) \
   V(tvOn, DBUS_METHOD_VOID) \
