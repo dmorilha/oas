@@ -174,4 +174,10 @@ void Controller::speedDecrease(void) {
   std::cout << "speed decrease" << std::endl;
   player_->speedDecrease();
 }
+
+void Controller::pressKey(const char * const s) {
+  assert(NULL != player_);
+  std::cout << "press key(s) \"" << s << "\"" <<  std::endl;
+  player_->pressKey(s);
+}
 } //end of oas namespace

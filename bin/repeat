@@ -1,10 +1,34 @@
 #!/bin/bash
+arguments='';
+
 case `basename $0` in
-"chapter-next")
-  method="oas.method.void.chapterNext"
+"decrease-subtitle-delay")
+  method="oas.method.void.pressKey"
+  arguments="$arguments string:d";
   ;;
-"chapter-previous")
-  method="oas.method.void.chapterPrevious"
+"increase-subtitle-delay")
+  method="oas.method.void.pressKey"
+  arguments="$arguments string:f";
+  ;;
+"toggle-subtitles")
+  method="oas.method.void.pressKey"
+  arguments="$arguments string:s";
+  ;;
+"next-audio-stream")
+  method="oas.method.void.pressKey"
+  arguments="$arguments string:k";
+  ;;
+"previous-audio-stream")
+  method="oas.method.void.pressKey"
+  arguments="$arguments string:j";
+  ;;
+"next-chapter")
+  method="oas.method.void.pressKey"
+  arguments="$arguments string:o";
+  ;;
+"previous-chapter")
+  method="oas.method.void.pressKey"
+  arguments="$arguments string:i";
   ;;
 "clear"|"clear-playlist")
   method="oas.method.void.clear"
@@ -15,8 +39,13 @@ case `basename $0` in
 "next")
   method="oas.method.void.next"
   ;;
-"next-subtitle-stream")
-  method="oas.method.void.nextSubtitleStream"
+"next-subtitles")
+  method="oas.method.void.pressKey"
+  arguments="$arguments string:m";
+  ;;
+"previous-subtitles")
+  method="oas.method.void.pressKey"
+  arguments="$arguments string:n";
   ;;
 "resume"|"unpause")
   method="oas.method.void.resume"
@@ -37,13 +66,16 @@ case `basename $0` in
   method="oas.method.void.lightsOn"
   ;;
 "show-info")
-  method="oas.method.void.showInfo"
+  method="oas.method.void.pressKey"
+  arguments="$arguments string:z";
   ;;
-"speed-increase")
-  method="oas.method.void.speedIncrease"
+"increase-speed")
+  method="oas.method.void.pressKey"
+  arguments="$arguments string:2";
   ;;
-"speed-decrease")
-  method="oas.method.void.speedDecrease"
+"decrease-speed")
+  method="oas.method.void.pressKey"
+  arguments="$arguments string:1";
   ;;
 "tv-off")
  method="oas.method.void.tvOff"
@@ -64,8 +96,6 @@ case `basename $0` in
   method="oas.method.void.setAudioDevice"
   ;;
 esac
-
-arguments='';
 
 for i in $@; do
   arguments="$arguments string:$i";

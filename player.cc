@@ -280,6 +280,17 @@ void Player::speedDecrease(void) const {
   process_->write("1"); //decrease speed
 }
 
+void Player::pressKey(const char * k) const {
+  if (NULL == process_) { return; }
+  for (; '\0' != *k; ++k) {
+    process_->write(*k);
+    usleep(150000);
+    if (*k == 'q') {
+      break;
+    }
+  }
+}
+
 void Player::repeat(void) {
   if (NULL != media_) {
     if (NULL == process_) {

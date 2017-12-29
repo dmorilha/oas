@@ -44,6 +44,7 @@ struct Controller {
   void nextSubtitleStream(void);
   void speedIncrease(void);
   void speedDecrease(void);
+  void pressKey(const char * const);
 };
 } //end of oas namespace
 

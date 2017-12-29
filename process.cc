@@ -91,6 +91,14 @@ void Process::write(const char * const s) {
   assert(length == static_cast< size_t >(written));
 }
 
+void Process::write(const char c) {
+  assert('\0' != c);
+  if (0 == pid_) { return; }
+  assert(0 != in_);
+  const int written = ::write(in_, &c, 1);
+  assert(1 == static_cast< size_t >(written));
+}
+
 bool Process::kill(void) {
   //TODO(dmorilha): not working...
   if (0 == pid_) { return false; }

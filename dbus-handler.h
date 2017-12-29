@@ -18,6 +18,7 @@ static const char * const DBUS_METHOD_VOID = "oas.method.void";
   V(nextSubtitleStream, DBUS_METHOD_VOID) \
   V(pause, DBUS_METHOD_VOID) \
   V(play, DBUS_METHOD_VOID) \
+  V(pressKey, DBUS_METHOD_VOID) \
   V(previous, DBUS_METHOD_VOID) \
   V(pushBack, DBUS_METHOD_VOID) \
   V(pushFront, DBUS_METHOD_VOID) \

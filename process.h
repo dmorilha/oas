@@ -18,6 +18,7 @@ struct Process {
   bool kill(void);
   void wait(void) const;
   void write(const char * const);
+  void write(const char);
   bool exists(void) const;
 };
 

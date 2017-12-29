@@ -68,18 +68,19 @@ struct Player {
   void chapterPrevious(void) const;
   void end(void);
   void forward(const int) const;
+  void nextSubtitleStream(void) const;
   void pause(void);
   void play(const Media &);
+  void pressKey(const char *) const;
+  void repeat(void);
   void resume(void);
   void rewind(const int) const;
   void showInfo(void) const;
+  void speedDecrease(void) const;
+  void speedIncrease(void) const;
   void stop(void);
   void volumeDown(void);
   void volumeUp(void);
-  void nextSubtitleStream(void) const;
-  void speedIncrease(void) const;
-  void speedDecrease(void) const;
-  void repeat(void);
   inline void setAudioDevice(const AudioDevice::Device a) { audioDevice_ = a; }
 };
 

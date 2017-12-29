@@ -311,4 +311,20 @@ void DBUS::speedDecrease(DBusMessage * const s) {
   controller_->speedDecrease();
 }
 
+void DBUS::pressKey(DBusMessage * const m) {
+  DBusMessageIter arguments;
+
+  if ( ! dbus_message_iter_init(m, &arguments)) {
+    std::cerr << "Method was called with no parameters" << std::endl;
+
+  } else if (DBUS_TYPE_STRING == dbus_message_iter_get_arg_type(&arguments)) {
+    const char * keys = NULL;
+    dbus_message_iter_get_basic(&arguments, &keys);
+    assert(NULL != controller_);
+    controller_->pressKey(keys);
+  } else {
+    std::cerr << "First argument is not string" << std::endl;
+  }
+}
+
 } //end of oas namespace
